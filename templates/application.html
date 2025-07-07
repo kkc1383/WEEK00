@@ -9,7 +9,6 @@
       font-size: 80px;
       font-weight: bold;
       text-align: center;
-      margin: 40px 0;
     }
     .btn-timer {
       font-size: 20px;
@@ -17,56 +16,108 @@
       margin: 10px;
     }
   </style>
+  <link rel="stylesheet" href="./CSS/application.css">
 </head>
 <body class="text-center">
 
   <h1>나의 수면 시간</h1>
-  <div id="timer-display">00:00</div>
+  <div id="timer-display">00:00:00</div>
 
   <button class="btn btn-success btn-timer" onclick="startTimer()">시작</button>
   <button class="btn btn-danger btn-timer" onclick="stopTimer()">종료</button>
 
   <div id="duration-output" class="mt-4" style="font-size: 20px;"></div>
+  <!--
+   초 단위로 변환해야됨
+   시작을 누르면 디비로 id 이름 날짜 수면시작시간 저장
+   종료를 누르면 디비로 수면종료시간 총 수면시간 저장
+  -->
 
   <script>
+    let seconds = 0;
+    let timer = null;
     let startTime = null;
-    let timerInterval = null;
 
-    function formatTime(minutes, seconds) {
-      return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    function formatTime(totalSeconds) {
+      const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+      const secs = String(totalSeconds % 60).padStart(2, '0');
+      return `${hrs}:${mins}:${secs}`;
     }
 
     function updateTimerDisplay() {
-      const now = new Date();
-      const diffMs = now - startTime;
-      const totalSeconds = Math.floor(diffMs / 1000);
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-      document.getElementById('timer-display').innerText = formatTime(minutes, seconds);
+      const totalSeconds = seconds;
+      document.getElementById('timer-display').innerText = formatTime(totalSeconds);
     }
 
     function startTimer() {
-      if (timerInterval) return; // 이미 동작 중이면 무시
-      startTime = new Date();
+      totalStartTime = new Date(); // 시작시간 데이터
+
+      let date = totalStartTime.getDate();
+      let month = totalStartTime.getMonth() + 1;
+      let year = totalStartTime.getFullYear();
+      let day = year + '-' + month + '-' + date; // 시작 날짜
+
+      console.log(day);
+
+      let hour = totalStartTime.getHours();
+      let minute = totalStartTime.getMinutes();
+      let startTime = hour + ':' + minute; // 시작 시간
+
+      console.log(startTime); 
+
+      if (timer) return; // 이미 동작 중이면 무시
+      seconds = 0;
       document.getElementById('duration-output').innerText = '';
       updateTimerDisplay();
-      timerInterval = setInterval(updateTimerDisplay, 60000);
+      timer = setInterval(() => {
+        seconds++;
+        updateTimerDisplay();
+      }, 1000);
     }
 
     function stopTimer() {
-      if (!timerInterval) return;
-      clearInterval(timerInterval);
-      timerInterval = null;
+      if (!timer) return;
+      clearInterval(timer);
+      timer = null;
 
-      const endTime = new Date();
-      const diffMs = endTime - startTime;
-      const totalSeconds = Math.floor(diffMs / 1000);
+      const totalEndTime = new Date(); // 종료시간 데이터
+
+      let endTime = totalEndTime.getHours() + ':' + totalEndTime.getMinutes();
+      console.log(endTime); // 종료시간
+
+      const totalSeconds = seconds;
       const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
+      const remainingSeconds = totalSeconds % 60;
 
       document.getElementById('duration-output').innerText =
-        `총 소요 시간: ${formatTime(minutes, seconds)} (시:분)`;
+        `총 소요 시간: ${formatTime(totalSeconds)}`;
+
+      const totalTakeTime = totalEndTime - totalStartTime;
+      console.log(totalTakeTime); // 총 수면시간
     }
+
+    function resetTimer() {
+      clearInterval(timer);
+      seconds = 0;
+      console.log(formatTime(seconds)); // 00:00:00
+    }
+
+    $.ajax({
+      type: "POST",
+      url: "/application/post",
+      data: {
+        start_time: startTime,
+        total_time: seconds,
+      },
+      success: function (response) {
+        if (response['result'] === 'success') {
+          alert('성공');
+        } else {
+          alert('실패!');
+        }
+      }
+    });
   </script>
 
 </body>

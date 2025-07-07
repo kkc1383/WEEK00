@@ -1,0 +1,154 @@
+/* CSS Reset - 모든 브라우저의 기본 스타일을 초기화 */
+
+/* 모든 요소에 대해 box-sizing을 border-box로 설정 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* HTML과 body 기본 설정 */
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'pretandard','Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+}
+
+/* 제목 요소 마진 제거 */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* 단락과 리스트 마진 제거 */
+p, ul, ol, dl, dd {
+  margin: 0;
+}
+
+/* 리스트 스타일 제거 */
+ul, ol {
+  list-style: none;
+  padding: 0;
+}
+
+/* 링크 스타일 초기화 */
+a {
+  color: inherit;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+/* 이미지 설정 */
+img {
+  max-width: 100%;
+  height: auto;
+  border-style: none;
+  vertical-align: middle;
+}
+
+/* 버튼 초기화 */
+button {
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* 입력 요소 초기화 */
+input, textarea, select {
+  font: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+/* 테이블 초기화 */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* 인용문 초기화 */
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+/* 코드 요소 초기화 */
+code, pre {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: inherit;
+}
+
+/* 수평선 초기화 */
+hr {
+  border: none;
+  height: 1px;
+  background-color: #ccc;
+  margin: 1em 0;
+}
+
+/* 포커스 스타일 (접근성) */
+:focus {
+  outline: 2px solid #007acc;
+  outline-offset: 2px;
+}
+
+/* 스크린 리더용 숨김 텍스트 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 선택 텍스트 스타일 */
+::selection {
+  background-color: #007acc;
+  color: white;
+}
+
+/* 스크롤바 스타일링 (웹킷 브라우저) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+} 
