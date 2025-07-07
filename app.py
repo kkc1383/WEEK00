@@ -34,49 +34,17 @@ app.json = CustomJSONProvider(app)
 
 @app.route('/')
 def home():
-   return render_template('index.html')
+   return render_template('login.html')
 
-@app.route('/memo/read',methods=['GET'])
-def read_memos():
-    result=list(db.memos.find({}).sort('likes',-1))
-    return jsonify({'result':'success','memos_list':result})
 
-@app.route('/memo/post',methods=['POST'])
-def post_memo():
-   title_receive=request.form['title_give']
-   text_receive=request.form['text_give']
-   likes_receive=request.form['likes_give']
+@app.route('/register') # register로 라우팅 한 부분
+def register():
+   return render_template('register.html') # register.html로 이동
 
-   memo={'title':title_receive, 'text':text_receive, 'likes':int(likes_receive)}
-   
-   db.memos.insert_one(memo)
+@app.route('/find') # find로 라우팅 한 부분
+def find():
+   return render_template('find.html') # find.html로 이동
 
-   return jsonify({'result':'success'})
-
-@app.route('/memo/delete', methods=['POST'])
-def delete_memo():
-    id_receive=request.form['id_give']
-    db.memos.delete_one({'_id':ObjectId(id_receive)})
-
-    return jsonify({'result': 'success'})
-
-@app.route('/memo/like', methods=['POST'])
-def like_memo():
-    id_receive=request.form['id_give']
-    memo=db.memos.find_one({'_id':ObjectId(id_receive)})
-    new_likes=int(memo['likes'])+1
-    db.memos.update_one({'_id':ObjectId(id_receive)},{'$set':{'likes':new_likes}})
-
-    return jsonify({'result': 'success'})
-
-@app.route('/memo/edit', methods=['POST'])
-def edit_memo():
-    id_receive=request.form['id_give']
-    title_receive=request.form['title_give']
-    text_receive=request.form['text_give']
-    db.memos.update_one({'_id':ObjectId(id_receive)},{'$set':{'title':title_receive, 'text':text_receive}})
-
-    return jsonify({'result': 'success'})
 
 
 if __name__ == '__main__':  
