@@ -1,57 +1,113 @@
 <!Doctype html>
 <html lang="ko">
 
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-            integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
-            crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-
-		<!-- JS -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-            crossorigin="anonymous"></script>
-
-        <!-- 구글폰트 -->
-        <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
-        <title>니 실력에 잠이 오나?</title>
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
 
-        <!-- style -->
-        <style type="text/css">
-        </style>
-        <script>
-        </script>
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
 
-    </head>
-    <!-- ID /PW 찾기 구현 해야 함!-->
-    <body>
-        <div class="wrap">
-            <div class="jumbotron">
-                <div class="title">
-                    <h1 class="display-4">ID/PW 찾기</h1>
-                </div>
-                <div id="post-memos" class="form-post">
-                    <div class="form-group">
-                        <input id="memo-title" class="form-control" placeholder="아이디">
-                    </div>
-                    <div class="form-group">
-                        <input id="memo-title" class="form-control" placeholder="비밀번호">
-                    </div>
-                </div>
-            </div>
-            <div id="card-list" class="card-columns">
-                
-            </div>
-        </div>
-    </body>
+
+    <title>니 실력에 잠이 오나?</title>
+
+    <!-- style -->
+    <style type="text/css">
+    </style>
+    <script>
+    </script>
+
+</head>
+<!-- ID /PW 찾기 구현 해야 함!-->
+
+<body>
+    <!-- 아이디 찾기 -->
+    <h3>아이디 찾기</h3>
+    <div class="form-group">
+        <label>성함</label>
+        <input id="find_name" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>이메일</label>
+        <input id="find_email" class="form-control" placeholder="example@gmail.com">
+    </div>
+    <button type="button" class="btn btn-success btn-block" onclick="findId()">아이디 찾기</button>
+
+    <br><br>
+
+    <!-- 비밀번호 찾기 -->
+    <h3>비밀번호 찾기</h3>
+    <div class="form-group">
+        <label>아이디</label>
+        <input id="findpw_userid" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>성함</label>
+        <input id="findpw_name" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>이메일</label>
+        <input id="findpw_email" class="form-control" placeholder="example@gmail.com">
+    </div>
+    <button type="button" class="btn btn-success btn-block" onclick="findPw()">비밀번호 찾기</button>
+</body>
+<script>
+    function findId() {
+        let name = $('#find_name').val();
+        let email = $('find_email').val();
+
+        $.ajax({
+            type: "POST",
+            url: "/find_id",
+            data: {
+                name_give: name,
+                email_give: email
+            },
+            success: function (response) {
+                if (response['result'] === 'success') {
+                    alert(`당신의 아이디는: ${response['userid']}`);
+                } else {
+                    alert('일치하는 정보가 없습니다.');
+                }
+            }
+        })
+    }
+
+    function findPw() {
+        let userid = $('#findpw_userid').val();
+        let name = $('#findpw_name').val();
+        let email = $('#findpw_email').val();
+
+        $.ajax({
+            type: "POST",
+            url: "/find_pw",
+            data: {
+                userid_give: userid,
+                name_give: name,
+                email_give: email
+            },
+            success: function (response) {
+                if (response['result'] === 'success') {
+                    alert('등록된 이메일로 비밀번호를 발송했습니다.');
+                } else {
+                    alert('일치하는 정보가 없습니다.');
+                }
+            }
+        });
+    }
+</script>
 
 </html>
