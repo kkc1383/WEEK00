@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>타이머</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <style>
+    #timer-display {
+      font-size: 80px;
+      font-weight: bold;
+      text-align: center;
+      margin: 40px 0;
+    }
+    .btn-timer {
+      font-size: 20px;
+      width: 120px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body class="text-center">
+
+  <h1>나의 수면 시간</h1>
+  <div id="timer-display">00:00</div>
+
+  <button class="btn btn-success btn-timer" onclick="startTimer()">시작</button>
+  <button class="btn btn-danger btn-timer" onclick="stopTimer()">종료</button>
+
+  <div id="duration-output" class="mt-4" style="font-size: 20px;"></div>
+
+  <script>
+    let startTime = null;
+    let timerInterval = null;
+
+    function formatTime(minutes, seconds) {
+      return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    }
+
+    function updateTimerDisplay() {
+      const now = new Date();
+      const diffMs = now - startTime;
+      const totalSeconds = Math.floor(diffMs / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      document.getElementById('timer-display').innerText = formatTime(minutes, seconds);
+    }
+
+    function startTimer() {
+      if (timerInterval) return; // 이미 동작 중이면 무시
+      startTime = new Date();
+      document.getElementById('duration-output').innerText = '';
+      updateTimerDisplay();
+      timerInterval = setInterval(updateTimerDisplay, 60000);
+    }
+
+    function stopTimer() {
+      if (!timerInterval) return;
+      clearInterval(timerInterval);
+      timerInterval = null;
+
+      const endTime = new Date();
+      const diffMs = endTime - startTime;
+      const totalSeconds = Math.floor(diffMs / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+
+      document.getElementById('duration-output').innerText =
+        `총 소요 시간: ${formatTime(minutes, seconds)} (시:분)`;
+    }
+  </script>
+
+</body>
+</html>

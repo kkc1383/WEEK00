@@ -42,7 +42,7 @@ def register():
    return render_template('register.html') # register.html로 이동
 
 @app.route('/register/post',methods=['POST'])
-def post_memo():
+def regist_account():
    id_receive=request.form['id_give']
    pw_receive=request.form['pw_give']
    name_receive=request.form['name_give']
