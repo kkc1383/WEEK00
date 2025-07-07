@@ -15,7 +15,7 @@ db=client.dbjungle
 import json
 import sys
 
-class CustomJSONEncoder(json.JSONEncoder):
+class CustomJSONEncoder(json.JSONEncoder): #주석
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
