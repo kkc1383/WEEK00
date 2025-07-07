@@ -10,12 +10,12 @@ import sys
 
 app = Flask(__name__)
 client=MongoClient('mongodb://test:test@3.34.90.101',27017)
-db=client.dbjungle
+db=client.dbAccounts
 
 import json
 import sys
 
-class CustomJSONEncoder(json.JSONEncoder): #주석
+class CustomJSONEncoder(json.JSONEncoder): 
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
@@ -40,6 +40,20 @@ def home():
 @app.route('/register') # register로 라우팅 한 부분
 def register():
    return render_template('register.html') # register.html로 이동
+
+@app.route('/register/post',methods=['POST'])
+def post_memo():
+   id_receive=request.form['id_give']
+   pw_receive=request.form['pw_give']
+   name_receive=request.form['name_give']
+   gender_receive=request.form['gender_give']
+   email_receive=request.form['email_give']
+   birth_receive=request.form['birth_give']
+   account={'id':id_receive, 'pw':pw_receive, 'name':name_receive, 'gender':gender_receive, 'email':email_receive, 'birth':birth_receive}
+   
+   db.accounts.insert_one(account)
+
+   return jsonify({'result':'success'})
 
 @app.route('/find') # find로 라우팅 한 부분
 def find():
