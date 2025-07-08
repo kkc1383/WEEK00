@@ -44,7 +44,9 @@
       color: #555;
     }
 
-    .btn-success {
+    .btn-success {  
+      color: #fff;
       background-color: #05D182;
       border-color: #05D182;
+      font-size: 1.1rem;
   }
