@@ -16,9 +16,9 @@
       <div class="calendar-wrapper">
         <h1>
           <!-- ✅ a href로 연/월 이동 -->
-          <a href="/?year={{ prev_year }}&month={{ prev_month }}">◀</a>
+          <a href="{{ url_for('calender', year=prev_year, month=prev_month) }}">◀</a>
           <span>{{ year }}년 {{ month }}월</span>
-          <a href="/?year={{ next_year }}&month={{ next_month }}">▶</a>
+          <a href="{{ url_for('calender', year=next_year, month=next_month) }}">▶</a>
         </h1>
 
         <div class="calendar">
