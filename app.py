@@ -1,7 +1,7 @@
 from bson import ObjectId
 from pymongo import MongoClient
 
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect
 from flask.json.provider import JSONProvider
 import jwt
 import datetime
@@ -107,13 +107,61 @@ def login():
     pw_receive=request.form['password_give']
     found_user=db.accounts.find_one({'id':id_receive})
     if found_user['pw']==pw_receive:
-        return jsonify({'result':'success'})
+        access_token=jwt.encode({
+            'user_id':id_receive,
+            'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)
+        }, app.config['SECRET_KEY'],  algorithm='HS256')
+        refresh_token=jwt.encode({
+            'user_id':id_receive,
+            'exp':datetime.datetime.utcnow()+datetime.timedelta(days=7)
+        }, app.config['SECRET_KEY'], algorithm='HS256')
+        db.tokens.update_one(
+            {'user_id':id_receive},
+            {'$set':{'refresh_token':refresh_token}},
+            upsert=True
+        )
+        resp=jsonify({'result':'success','access_token':access_token})
+        resp.set_cookie('refresh_token',refresh_token,httponly=True,path='/refresh')
+        return resp
     else:
         return jsonify({'result':'failure'})
+@app.route('/refresh',methods=['POST'])
+def refresh():
+    refresh_token=request.cookies.get('refresh_token')
+    if not refresh_token:
+        return jsonify({'result':'no_token'}),401
+    
+    try:
+        payload=jwt.decode(refresh_token,app.config['SECRET_KEY'],algorithms=['HS256'])
+        user_id=payload['user_id']
+
+        stored=db.tokens.find_one({'user_id':user_id})
+        if stored and stored['refresh_token']==refresh_token:
+            new_access_token=jwt.encode({
+                'user_id':user_id,
+                'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)
+            },app.config['SECRET_KEY'],algorithm='HS256')
+            return jsonify({'result':'success','access_token':new_access_token})
+        else:
+            return jsonify({'result':'invalid_token'}),401
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result':'expired'}),401
+    except jwt.InvalidTokenError:
+        return jsonify({'result':'invalid'}),401
     
 @app.route('/application') # application으로 라우팅 한 부분
 def application():
-   return render_template('application.html') # application.html로 이동
+   token=request.cookies.get('access_token')
+   if not token:
+       return redirect('/')
+   try:
+       decoded=jwt.decode(token, app.config['SECRET_KEY'],algorithms=['HS256'])
+       user_id=decoded['user_id']
+       return render_template('application.html',user_id=user_id)
+   except jwt.ExpiredSignatureError:
+       return "토큰이 만료되었습니다. 다시 로그인해주세요."
+   except jwt.InvalidTokenError:
+       return "유효하지 않은 토큰입니다."
 
 
 if __name__ == '__main__':  

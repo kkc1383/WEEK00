@@ -46,6 +46,18 @@
     const userId = "{{ user.id|default:'guest' }}";
     const userName = "{{ user.username|default:'게스트' }}";
 
+    function tryRefreshAndRetry(callback){
+      $.post('/refresh',{}, function (res){
+        if (res.result==='success'){
+          localStorage.setItem('access_token',res.access_token);
+          callback();
+        }else{
+          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+          window.location.href='/';
+        }
+      });
+    }
+
     function formatTime(totalSeconds) {
       const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
       const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
