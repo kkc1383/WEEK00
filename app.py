@@ -124,12 +124,12 @@ def login():
         access_token=jwt.encode({
             'user_id':id_receive,
             'user_name':found_user['name'],
-            'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)
+            'exp':datetime.utcnow()+timedelta(minutes=15)
         }, app.config['SECRET_KEY'],  algorithm='HS256')
         refresh_token=jwt.encode({
             'user_id':id_receive,
             'user_name':found_user['name'],
-            'exp':datetime.datetime.utcnow()+datetime.timedelta(days=7)
+            'exp':datetime.utcnow()+timedelta(days=7)
         }, app.config['SECRET_KEY'], algorithm='HS256')
         db.tokens.update_one(
             {'user_id':id_receive, 'user_name':found_user['name']},
@@ -156,7 +156,7 @@ def refresh():
             new_access_token=jwt.encode({
                 'user_id':user_id,
                 'user_name':user_name,
-                'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)
+                'exp':datetime.utcnow()+timedelta(minutes=15)
             },app.config['SECRET_KEY'],algorithm='HS256')
             return jsonify({'result':'success','access_token':new_access_token})
         else:
@@ -223,7 +223,9 @@ def end_sleep():
 def refresh_duration():
     return jsonify({'result':'success'})
 
-
+@app.route('/calender')
+def calender():
+    return render_template('calender.html')
 if __name__ == '__main__':  
    print(sys.executable)
    app.run('0.0.0.0', port=5000, debug=True)
