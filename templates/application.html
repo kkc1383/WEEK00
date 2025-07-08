@@ -70,6 +70,8 @@
       const hour = totalStartTime.getHours();
       const minute = totalStartTime.getMinutes();
       const startTime = `${hour}:${minute}`;
+      let inputValue = null;
+      let wakeup_goal_receive = null; // 목표 기상시간 저장
 
       if (timer) return; // 이미 동작 중이면 무시
       seconds = 0;
@@ -82,12 +84,11 @@
       // 시작 정보 서버로 전송
       $.ajax({
         type: "POST",
-        url: "/application/post",
+        url: "/application/start",
         data: {
-          user_id: userId,
-          user_name: userName,
-          start_day: day,
-          start_time: startTime,
+          'id_give': userId, // 사용자아이디
+          'name_give': userName, // 사용자이름
+          'wakeup_goal_receive': wakeup_goal_receive // 목표 기상시간
         },
         success: function (response) {
           if (response['result'] === 'success') {
