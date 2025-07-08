@@ -3,8 +3,8 @@ from pymongo import MongoClient
 
 from flask import Flask, render_template, jsonify, request, redirect
 from flask.json.provider import JSONProvider
-import jwt
 from datetime import datetime, timedelta
+import jwt
 
 import json
 import sys
@@ -34,15 +34,13 @@ class CustomJSONProvider(JSONProvider):
 app.json = CustomJSONProvider(app)
 
 def get_duration(start,end):
-    fmt="%H:%M"
-    dt1=datetime.strptime(start,fmt)
-    dt2=datetime.strptime(end,fmt)
 
     if end<=start:
         end+=timedelta(days=1)
 
     duration= end-start
-    hours, remainder=divmod(duration.seconds,3600)
+    total_seconds=duration.total_seconds()
+    hours, remainder=divmod(int(total_seconds),3600)
     minutes=remainder//60
 
     return f"{hours:02d}:{minutes:02d}"
@@ -187,22 +185,43 @@ def application():
 def start_sleep():
     id_receive=request.form['id_give']
     name_receive=request.form['name_give']
-    sleep_start_receive=request.form['sleep_start_give']
-    sleepData={
-        'id':id_receive,
-        'name':name_receive,
-        'sleep_start':sleep_start_receive,
-        'sleep_end':0,
-    }
-    db.sleepdata.insert_one(sleepData)
+    wakeup_goal_receive=request.form['wakeup_goal_receive']
+    checkData=db.sleepdata.find_one({'id':id_receive,'name':name_receive,'sleep_end':0})
+    if not checkData :
+        sleepData={
+            'id':id_receive,
+            'name':name_receive,
+            'sleep_start':datetime.utcnow(),
+            'sleep_end':0,
+            'wakeup_goal':wakeup_goal_receive,
+            'duration':0,
+            'isAchieved':False
+        }
+        db.sleepdata.insert_one(sleepData)
+        return jsonify({'result':'success'})
+    else:
+        return jsonify({'result':'failure'})
 
 @app.route('/application/end',methods=['POST'])
 def end_sleep():
     id_receive=request.form['id_give']
     name_receive=request.form['name_give']
-    sleep_end_receive=request.form['sleep_end_give']
+    user=db.account.find_one({'id':id_receive,'name':name_receive,'sleep_end':0})
+    sleep_end=datetime.utcnow()
+    duration=get_duration(sleep_end,user['sleep_start'])
+    
+    h,m=map(int,user['wakeup_goal'].split(":"))
+    goal=sleep_end.replace(hour=h, minute=m, second=0, microsecond=0)
+    isAchieved=(sleep_end<=goal)
+    db.sleepdata.update_one(
+        {'_id':user['_id']},
+        {'$set':{'sleep_end':sleep_end,'duration':duration,'isAchieved':isAchieved}}
+    )
+    return jsonify({'result':'success'})
 
-    db.sleepdata.update_one({'id':id_receive,'name':name_receive},{'$set':{'sleep_end':sleep_end_receive}})
+@app.route('/application/refresh')
+def refresh_duration():
+    return jsonify({'result':'success'})
 
 
 if __name__ == '__main__':  
