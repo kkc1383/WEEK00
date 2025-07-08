@@ -1,0 +1,19 @@
+      body {
+        background: #f8f8f8;
+        font-family: 'Stylish', sans-serif;
+      }
+      
+      .find-box {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 40px 30px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      }
+      
+      h3 {
+        font-weight: bold;
+        margin-bottom: 25px;
+        text-align: center;
+      }
