@@ -34,6 +34,21 @@
             }
         </style>
         <script>
+            $(document).ready(function() {
+                $('#form-pw, #form-pwchk').on('keyup', function() {
+                    let pw = $('#form-pw').val();
+                    let pwchk = $('#form-pwchk').val();
+                    let msg = $('#pw-match-msg');
+
+                    if (pwchk === "") {
+                        msg.text("");
+                    } else if (pw === pwchk) {
+                        msg.text("비밀번호가 일치합니다.").css('color', 'green');
+                    } else {
+                        msg.text("비밀번호가 일치하지 않습니다.").css('color', 'red');
+                    }
+                });
+            });
             function registerIn(){
                 let id=$('#form-id').val();
                 let pw=$('#form-pw').val();
@@ -60,6 +75,8 @@
                     success: function (response) {
                         if (response["result"] == "success") {
                             alert("회원가입 성공!");
+                            alert("로그인 페이지로 이동합니다.");
+                            window.location.href='/';
                         } else{
                             alert(' 서버 오류!')
                         }
@@ -134,22 +151,4 @@
             </div>
         </div>
     </body>
-    <script>
-$(document).ready(function() {
-    $('#form-pw, #form-pwchk').on('keyup', function() {
-        let pw = $('#form-pw').val();
-        let pwchk = $('#form-pwchk').val();
-        let msg = $('#pw-match-msg');
-
-        if (pwchk === "") {
-            msg.text("");
-        } else if (pw === pwchk) {
-            msg.text("비밀번호가 일치합니다.").css('color', 'green');
-        } else {
-            msg.text("비밀번호가 일치하지 않습니다.").css('color', 'red');
-        }
-    });
-});
-</script>
-
 </html>

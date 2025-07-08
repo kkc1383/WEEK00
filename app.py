@@ -67,7 +67,7 @@ def find_id():
     email_receive=request.form['email_give']
     found_user=db.accounts.find_one({'name':name_receive, 'email':email_receive})
     if found_user:
-        return jsonify({'result':'success','id':found_user['id']})
+        return jsonify({'result':'success','userid':found_user['id']})
     else:
         return jsonify({'result':'failure'})
     
@@ -83,13 +83,13 @@ def send_email(receiver, pw):  # email 보내기기
     smtp.sendmail('farvinjr104@gmail.com', receiver, msg.as_string())
     smtp.quit()
     
-@app.route('/find_pw', methods=['POST'])
+@app.route('/find/pw', methods=['POST'])
 def find_pw():
     userid_receive = request.form['userid_give']
     name_receive = request.form['name_give']
     email_receive = request.form['email_give']
     user = db.accounts.find_one({
-        'userid': userid_receive,
+        'id': userid_receive,
         'name': name_receive,
         'email': email_receive
     })

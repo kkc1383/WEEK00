@@ -67,11 +67,11 @@
 <script>
     function findId() {
         let name = $('#find_name').val();
-        let email = $('find_email').val();
+        let email = $('#find_email').val();
 
         $.ajax({
             type: "POST",
-            url: "/find_id",
+            url: "/find/id",
             data: {
                 name_give: name,
                 email_give: email
@@ -79,6 +79,8 @@
             success: function (response) {
                 if (response['result'] === 'success') {
                     alert(`당신의 아이디는: ${response['userid']}`);
+                    alert("로그인 페이지로 이동합니다.");
+                    window.location.href='/';
                 } else {
                     alert('일치하는 정보가 없습니다.');
                 }
@@ -93,7 +95,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/find_pw",
+            url: "/find/pw",
             data: {
                 userid_give: userid,
                 name_give: name,
@@ -102,6 +104,8 @@
             success: function (response) {
                 if (response['result'] === 'success') {
                     alert('등록된 이메일로 비밀번호를 발송했습니다.');
+                    alert("로그인 페이지로 이동합니다.");
+                    window.location.href='/';
                 } else {
                     alert('일치하는 정보가 없습니다.');
                 }
