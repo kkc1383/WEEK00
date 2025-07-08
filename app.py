@@ -110,7 +110,7 @@ def login():
         access_token=jwt.encode({
             'user_id':id_receive,
             'user_name':found_user['name'],
-            'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=1)
+            'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)
         }, app.config['SECRET_KEY'],  algorithm='HS256')
         refresh_token=jwt.encode({
             'user_id':id_receive,
@@ -142,7 +142,7 @@ def refresh():
             new_access_token=jwt.encode({
                 'user_id':user_id,
                 'user_name':user_name,
-                'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=1)
+                'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)
             },app.config['SECRET_KEY'],algorithm='HS256')
             return jsonify({'result':'success','access_token':new_access_token})
         else:
