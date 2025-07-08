@@ -68,3 +68,13 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.success {
+  background: lightgreen;
+  /* 목표 달성 */
+}
+
+.fail {
+  background: lightcoral;
+  /* 실패 */
+}
