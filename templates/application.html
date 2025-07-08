@@ -97,8 +97,6 @@
 
       if (timer) return; // 이미 동작 중이면 무시
       seconds = 0;
-      document.getElementById('duration-output').innerText = '';
-      updateTimerDisplay();
       timer = setInterval(() => {
         seconds++;
         updateTimerDisplay();
