@@ -155,10 +155,6 @@
       const totalSeconds = seconds;
       const minutes = Math.floor(totalSeconds / 60);
       const remainingSeconds = totalSeconds % 60;
-
-      document.getElementById('duration-output').innerText =
-        `총 소요 시간: ${formatTime(totalSeconds)}`;
-
       const totalTakeTime = totalEndTime - totalStartTime; // 총 소요시간(밀리초)
 
 
