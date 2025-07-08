@@ -1,117 +1,129 @@
-<!Doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 
-    <!-- 구글폰트 -->
-    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+    <!-- Google Font -->
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <title>니 실력에 잠이 오나?</title>
+    <title>아이디/비밀번호 찾기</title>
 
-    <!-- style -->
-    <style type="text/css">
+    <style>
+      body {
+        background: #f8f8f8;
+        font-family: 'Stylish', sans-serif;
+      }
+      
+      .find-box {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 40px 30px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      }
+      
+      h3 {
+        font-weight: bold;
+        margin-bottom: 25px;
+        text-align: center;
+      }
     </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- 아이디 찾기 -->
+      <div class="find-box">
+        <h3>아이디 찾기</h3>
+        <div class="form-group">
+          <label>성 함</label>
+          <input id="find_name" class="form-control"/>
+        </div>
+        <div class="form-group">
+          <label>이메일</label>
+          <input id="find_email" class="form-control" placeholder="example@gmail.com" />
+        </div>
+        <button type="button" class="btn btn-success btn-block" onclick="findId()">아이디 찾기</button>
+      </div>
+
+      <!-- 비밀번호 찾기 -->
+      <div class="find-box">
+        <h3>비밀번호 찾기</h3>
+        <div class="form-group">
+          <label>아이디</label>
+          <input id="findpw_userid" class="form-control"/>
+        </div>
+        <div class="form-group">
+          <label>성 함</label>
+          <input id="findpw_name" class="form-control"/>
+        </div>
+        <div class="form-group">
+          <label>이메일</label>
+          <input id="findpw_email" class="form-control" placeholder="example@gmail.com" />
+        </div>
+        <button type="button" class="btn btn-success btn-block" onclick="findPw()">비밀번호 찾기</button>
+      </div>
+    </div>
+
     <script>
-    </script>
-
-</head>
-<!-- ID /PW 찾기 구현 해야 함!-->
-
-<body>
-    <!-- 아이디 찾기 -->
-    <h3>아이디 찾기</h3>
-    <div class="form-group">
-        <label>성함</label>
-        <input id="find_name" class="form-control">
-    </div>
-    <div class="form-group">
-        <label>이메일</label>
-        <input id="find_email" class="form-control" placeholder="example@gmail.com">
-    </div>
-    <button type="button" class="btn btn-success btn-block" onclick="findId()">아이디 찾기</button>
-
-    <br><br>
-
-    <!-- 비밀번호 찾기 -->
-    <h3>비밀번호 찾기</h3>
-    <div class="form-group">
-        <label>아이디</label>
-        <input id="findpw_userid" class="form-control">
-    </div>
-    <div class="form-group">
-        <label>성함</label>
-        <input id="findpw_name" class="form-control">
-    </div>
-    <div class="form-group">
-        <label>이메일</label>
-        <input id="findpw_email" class="form-control" placeholder="example@gmail.com">
-    </div>
-    <button type="button" class="btn btn-success btn-block" onclick="findPw()">비밀번호 찾기</button>
-</body>
-<script>
-    function findId() {
-        let name = $('#find_name').val();
-        let email = $('#find_email').val();
-
+      function findId() {
+        let name = $('#find_name').val()
+        let email = $('#find_email').val()
+      
         $.ajax({
-            type: "POST",
-            url: "/find/id",
-            data: {
-                name_give: name,
-                email_give: email
-            },
-            success: function (response) {
-                if (response['result'] === 'success') {
-                    alert(`당신의 아이디는: ${response['userid']}`);
-                    alert("로그인 페이지로 이동합니다.");
-                    window.location.href='/';
-                } else {
-                    alert('일치하는 정보가 없습니다.');
-                }
+          type: 'POST',
+          url: '/find/id',
+          data: {
+            name_give: name,
+            email_give: email
+          },
+          success: function (response) {
+            if (response['result'] === 'success') {
+              alert(`당신의 아이디는: ${response['userid']}`)
+              alert('로그인 페이지로 이동합니다.')
+              window.location.href = '/'
+            } else {
+              alert('일치하는 정보가 없습니다.')
             }
+          }
         })
-    }
-
-    function findPw() {
-        let userid = $('#findpw_userid').val();
-        let name = $('#findpw_name').val();
-        let email = $('#findpw_email').val();
-
+      }
+      
+      function findPw() {
+        let userid = $('#findpw_userid').val()
+        let name = $('#findpw_name').val()
+        let email = $('#findpw_email').val()
+      
         $.ajax({
-            type: "POST",
-            url: "/find/pw",
-            data: {
-                userid_give: userid,
-                name_give: name,
-                email_give: email
-            },
-            success: function (response) {
-                if (response['result'] === 'success') {
-                    alert('등록된 이메일로 비밀번호를 발송했습니다.');
-                    alert("로그인 페이지로 이동합니다.");
-                    window.location.href='/';
-                } else {
-                    alert('일치하는 정보가 없습니다.');
-                }
+          type: 'POST',
+          url: '/find/pw',
+          data: {
+            userid_give: userid,
+            name_give: name,
+            email_give: email
+          },
+          success: function (response) {
+            if (response['result'] === 'success') {
+              alert('등록된 이메일로 비밀번호를 발송했습니다.')
+              alert('로그인 페이지로 이동합니다.')
+              window.location.href = '/'
+            } else {
+              alert('일치하는 정보가 없습니다.')
             }
-        });
-    }
-</script>
-
+          }
+        })
+      }
+    </script>
+  </body>
 </html>
