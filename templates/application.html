@@ -131,8 +131,9 @@
         success: function (response) {
           if (response['result'] === 'success') {
             alert('성공');
+            con
           } else {
-            alert('실패!');
+            alert('이미 수면이 시작되었습니다!');
           }
         },
         error: function(xhr, status, error) {
@@ -180,8 +181,8 @@
         type: "POST",
         url: "/application/end",
         data: {
-          end_time: endTime,
-          total_time: timeInHoursMinutes,
+          'id_give': userId,
+          'name_give': userName,
         },
         success: function (response) {
           if (response['result'] === 'success') {
