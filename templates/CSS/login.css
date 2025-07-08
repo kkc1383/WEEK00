@@ -17,7 +17,7 @@
     .logo {
       width: 120px;
       height: 120px;
-      background: #00c37e;
+      background: #05D182;
       border-radius: 10px;
       margin: 0 auto 20px;
     }
@@ -43,3 +43,8 @@
       margin-top: 10px;
       color: #555;
     }
+
+    .btn-success {
+      background-color: #05D182;
+      border-color: #05D182;
+  }

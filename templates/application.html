@@ -44,6 +44,7 @@
 
     // 사용자 정보 변수 정의 (Django 템플릿 변수 사용)
     const userId = "{{ user_id|default('guest') }}";
+    const userName = "{{ user_name|default('게스트') }}";
 
     function tryRefreshAndRetry(callback){
       $.post('/refresh',{}, function (res){
@@ -80,10 +81,10 @@
       let minute = totalStartTime.getMinutes();
       let startTime = hour + ':' + minute; // 시작 시간 (시:분)
 
-      console.log(startTime); 
-      console.log(day);
-      console.log('사용자 ID:', userId);
-      console.log('사용자 이름:', userName);
+      console.log(startTime); // 콘솔창에 시작시간 출력
+      console.log(day); // 콘솔창에 시작날짜 출력
+      console.log('사용자 ID:', userId); // 콘솔창에 사용자아이디 출력
+      console.log('사용자 이름:', userName); // 콘솔창에 사용자이름 출력
 
       if (timer) return; // 이미 동작 중이면 무시
       seconds = 0;

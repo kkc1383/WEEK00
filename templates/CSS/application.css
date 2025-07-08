@@ -1,3 +1,6 @@
 @import "reset.css";
 
-
+.btn-success {
+    background-color: #05D182;
+    border-color: #05D182;
+}
