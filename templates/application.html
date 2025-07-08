@@ -20,7 +20,7 @@
 </head>
 <body class="text-center">
 
-  <h1>나의 수면 시간</h1>
+  <h1>{{ user_name }}님의 수면 시간</h1>
   <div id="timer-display">00:00:00</div>
 
   <button class="btn btn-success btn-timer" onclick="startTimer()">시작</button>
@@ -43,8 +43,7 @@
     let totalStartTime = null; // totalStartTime 변수 정의
 
     // 사용자 정보 변수 정의 (Django 템플릿 변수 사용)
-    const userId = "{{ user.id|default:'guest' }}";
-    const userName = "{{ user.username|default:'게스트' }}";
+    const userId = "{{ user_id|default('guest') }}";
 
     function tryRefreshAndRetry(callback){
       $.post('/refresh',{}, function (res){

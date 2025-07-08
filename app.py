@@ -109,14 +109,16 @@ def login():
     if found_user['pw']==pw_receive:
         access_token=jwt.encode({
             'user_id':id_receive,
-            'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)
+            'user_name':found_user['name'],
+            'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=1)
         }, app.config['SECRET_KEY'],  algorithm='HS256')
         refresh_token=jwt.encode({
             'user_id':id_receive,
+            'user_name':found_user['name'],
             'exp':datetime.datetime.utcnow()+datetime.timedelta(days=7)
         }, app.config['SECRET_KEY'], algorithm='HS256')
         db.tokens.update_one(
-            {'user_id':id_receive},
+            {'user_id':id_receive, 'user_name':found_user['name']},
             {'$set':{'refresh_token':refresh_token}},
             upsert=True
         )
@@ -134,12 +136,13 @@ def refresh():
     try:
         payload=jwt.decode(refresh_token,app.config['SECRET_KEY'],algorithms=['HS256'])
         user_id=payload['user_id']
-
+        user_name=payload['user_name']
         stored=db.tokens.find_one({'user_id':user_id})
         if stored and stored['refresh_token']==refresh_token:
             new_access_token=jwt.encode({
                 'user_id':user_id,
-                'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)
+                'user_name':user_name,
+                'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=1)
             },app.config['SECRET_KEY'],algorithm='HS256')
             return jsonify({'result':'success','access_token':new_access_token})
         else:
@@ -157,7 +160,8 @@ def application():
    try:
        decoded=jwt.decode(token, app.config['SECRET_KEY'],algorithms=['HS256'])
        user_id=decoded['user_id']
-       return render_template('application.html',user_id=user_id)
+       user_name=decoded['user_name']
+       return render_template('application.html',user_id=user_id, user_name=user_name)
    except jwt.ExpiredSignatureError:
        return "토큰이 만료되었습니다. 다시 로그인해주세요."
    except jwt.InvalidTokenError:
