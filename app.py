@@ -110,7 +110,7 @@ def login():
         access_token=jwt.encode({
             'user_id':id_receive,
             'user_name':found_user['name'],
-            'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)
+            'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=1)
         }, app.config['SECRET_KEY'],  algorithm='HS256')
         refresh_token=jwt.encode({
             'user_id':id_receive,
@@ -142,7 +142,7 @@ def refresh():
             new_access_token=jwt.encode({
                 'user_id':user_id,
                 'user_name':user_name,
-                'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)
+                'exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=1)
             },app.config['SECRET_KEY'],algorithm='HS256')
             return jsonify({'result':'success','access_token':new_access_token})
         else:
@@ -154,14 +154,14 @@ def refresh():
     
 @app.route('/application') # application으로 라우팅 한 부분
 def application():
-   token=request.cookies.get('access_token') 
+   token=request.cookies.get('access_token')
    if not token:
        return redirect('/')
    try:
        decoded=jwt.decode(token, app.config['SECRET_KEY'],algorithms=['HS256'])
        user_id=decoded['user_id']
        user_name=decoded['user_name']
-       return render_template('application.html',user_id=user_id, user_name=user_name) # ssr 방식
+       return render_template('application.html',user_id=user_id, user_name=user_name)
    except jwt.ExpiredSignatureError:
        return "토큰이 만료되었습니다. 다시 로그인해주세요."
    except jwt.InvalidTokenError:

@@ -1,154 +1,191 @@
-<!Doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-            integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
-            crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <!-- Google Font -->
 
-		<!-- JS -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-            crossorigin="anonymous"></script>
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        <!-- 구글폰트 -->
-        <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+  <title>회원가입</title>
 
+  <style>
+    body {
+      background: #f8f8f8;
+      font-family: 'Stylish', sans-serif;
+    }
 
-        <title>니 실력에 잠이 오나?</title>
+    .signup-box {
+      max-width: 500px;
+      margin: 80px auto;
+      padding: 40px 30px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    }
 
-        <!-- style -->
-        <style type="text/css">
-            .btn-check:checked + .btn {
-                background-color: #0d6efd;
-                color: white;
-                border-color: #0d6efd;
-            }
-        </style>
-        <script>
-            $(document).ready(function() {
-                $('#form-pw, #form-pwchk').on('keyup', function() {
-                    let pw = $('#form-pw').val();
-                    let pwchk = $('#form-pwchk').val();
-                    let msg = $('#pw-match-msg');
+    #pw-match-msg {
+      font-size: 13px;
+    }
+  </style>
 
-                    if (pwchk === "") {
-                        msg.text("");
-                    } else if (pw === pwchk) {
-                        msg.text("비밀번호가 일치합니다.").css('color', 'green');
-                    } else {
-                        msg.text("비밀번호가 일치하지 않습니다.").css('color', 'red');
-                    }
-                });
-            });
-            function registerIn(){
-                let id=$('#form-id').val();
-                let pw=$('#form-pw').val();
-                let name=$('#form-name').val();
-                let gender=$('input[name="gender"]:checked').val();
-                let email=$('#form-email').val();
+  <script>
+    $(document).ready(function () {
+      $('#form-pw, #form-pwchk').on('keyup', function () {
+        let pw = $('#form-pw').val();
+        let pwchk = $('#form-pwchk').val();
+        let msg = $('#pw-match-msg');
 
-                let year=$('#form-birth-year').val();
-                let month=$('#form-birth-month').val();
-                let day=$('#form-birth-day').val();
-                let birth=`${year}-${month}-${day}`;
+        if (pwchk === "") {
+          msg.text("");
+        } else if (pw === pwchk) {
+          msg.text("비밀번호가 일치합니다.").css('color', 'green');
+        } else {
+          msg.text("비밀번호가 일치하지 않습니다.").css('color', 'red');
+        }
+      });
+    });
 
-                $.ajax({
-                    type: "POST",
-                    url: "/register/post",
-                    data: {
-                        id_give : id,
-                        pw_give:pw,
-                        name_give:name,
-                        gender_give:gender,
-                        email_give:email,
-                        birth_give:birth
-                    }    ,
-                    success: function (response) {
-                        if (response["result"] == "success") {
-                            alert("회원가입 성공!");
-                            alert("로그인 페이지로 이동합니다.");
-                            window.location.href='/';
-                        } else{
-                            alert(' 서버 오류!')
-                        }
-                    }
-                })
-            }
-        </script>
+    function registerIn() {
+      let id = $('#form-id').val();
+      let pw = $('#form-pw').val();
+      let name = $('#form-name').val();
+      let gender = $('input[name="gender"]:checked').val();
+      let email = $('#form-email').val();
 
-    </head>
+      let year = $('#form-birth-year').val();
+      let month = $('#form-birth-month').val();
+      let day = $('#form-birth-day').val();
+      let birth = `${year}-${month}-${day}`;
 
-    <body>
-        <div class="wrap">
-            <div class="jumbotron">
-                <div class="title">
-                    <h1 class="display-4">회원가입</h1>
-                </div>
-                <div id="post-memos" class="form-post">
-                    <div class="form-group">
-                        <input id="form-id" class="form-control" placeholder="아이디">    <!-- 아이디 입력 받는 곳-->
-                    </div>
-                    <div class="form-group">
-                        <input type="password" id="form-pw" class="form-control" placeholder="비밀번호"> <!-- 비밀번호 입력 받는 곳-->
-                    </div>
-                    <div class="form-group">
-                        <input type="password" id="form-pwchk" class="form-control" placeholder="비밀번호 재확인"> <!-- **비밀번호 재확인 관련 구현 해야 함!**-->
-                        <small id="pw-match-msg"></small> <!-- ✅ 실시간 메시지 -->
-                    </div>
-                    
-                    <div class="form-group">
-                        <input id="form-name" class="form-control" placeholder="이름"> <!-- 이름 입력 받는 곳-->
-                    </div>
-                    
-                    <div class="mb-3">          <!-- 생년월일 입력 받는 곳-->
-                        <label class="form-label">생년월일</label>
-                        <div class="d-flex gap-2">
-                            <!-- 년도 선택 -->
-                            <select class="form-select" id="form-birth-year">
-                            <option disabled selected></option>
-                            {% for y in range(1950, 2026) %}
-                                <option value="{{ y }}">{{ y }}</option>
-                            {% endfor %}
-                            </select>년
+      $.ajax({
+        type: "POST",
+        url: "/register/post",
+        data: {
+          id_give: id,
+          pw_give: pw,
+          name_give: name,
+          gender_give: gender,
+          email_give: email,
+          birth_give: birth
+        },
+        success: function (response) {
+          if (response["result"] == "success") {
+            alert("회원가입 성공!");
+            alert("로그인 페이지로 이동합니다.");
+            window.location.href = '/';
+          } else {
+            alert('서버 오류!');
+          }
+        }
+      })
+    }
+  </script>
+</head>
 
-                            <!-- 월 선택 -->
-                            <select class="form-select" id="form-birth-month">
-                            <option disabled selected></option>
-                            {% for m in range(1, 13) %}
-                                <option value="{{ m }}">{{ m }}</option>
-                            {% endfor %}
-                            </select>월
+<body>
+  <div class="container">
+    <div class="signup-box">
+      <h3 class="text-center mb-4">회원가입</h3>
 
-                            <!-- 일 선택 -->
-                            <select class="form-select" id="form-birth-day">
-                            <option disabled selected></option>
-                            {% for d in range(1, 32) %}
-                                <option value="{{ d }}">{{ d }}</option>
-                            {% endfor %}
-                            </select>일
-                        </div>
-                    </div>
-                    <div class="form-group">  <!-- 성별 입력 받는 곳 -->
-                        <label class="form-label">성별</label>
-                        <input type="radio" class="btn-check" name="gender" id="male" value="male" autocomplete="off">남자
+      <div class="form-group">
+        <input id="form-id" class="form-control" placeholder="아이디">
+      </div>
+      <div class="form-group">
+  <input type="password" id="form-pw" class="form-control" placeholder="비밀번호">
+  <small id="pw-rule-msg" class="form-text text-muted">
+    8자 이상 15자 미만으로 입력하세요
+  </small>
+</div>
+      <div class="form-group">
+        <input type="password" id="form-pwchk" class="form-control" placeholder="비밀번호 재확인">
+        <small id="pw-match-msg"></small>
+      </div>
+      <div class="form-group">
+        <input id="form-name" class="form-control" placeholder="이름">
+      </div>
 
-                        <input type="radio" class="btn-check" name="gender" id="female" value="female" autocomplete="off">여자
-                    </div>             
-                    <div class="form-group">
-                        <input id="form-email" class="form-control" placeholder="이메일"> <!-- 이메일 입력 받는 곳-->
-                    </div>
-                    <button type="submit" class="btn btn-primary" onclick="registerIn()">가입하기</button>
-                </div>
-            </div>
+      <div class="mb-3">
+        <label class="form-label">생년월일</label>
+        <div class="d-flex">
+          <select class="form-control mr-2" id="form-birth-year">
+            <option disabled selected>년</option>
+          </select>
+          <select class="form-control mr-2" id="form-birth-month">
+            <option disabled selected>월</option>
+          </select>
+          <select class="form-control" id="form-birth-day">
+            <option disabled selected>일</option>
+          </select>
         </div>
-    </body>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label d-block">성별</label>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="gender" id="male" value="male" checked>
+          <label class="form-check-label" for="male">남</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+          <label class="form-check-label" for="female">여</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input id="form-email" class="form-control" placeholder="이메일">
+      </div>
+
+      <button type="button" class="btn btn-success btn-block" onclick="registerIn()">가입하기</button>
+    </div>
+  </div>
+</body>
+
+<script>
+  // 페이지 로드 시 옵션 자동 채우기
+  $(document).ready(function() {
+    // 년도 1950 ~ 현재년도
+    let nowYear = new Date().getFullYear();
+    for (let y = 1950; y <= nowYear; y++) {
+      $('#form-birth-year').append(`<option value="${y}">${y}</option>`);
+    }
+
+    // 월 1 ~ 12
+    for (let m = 1; m <= 12; m++) {
+      $('#form-birth-month').append(`<option value="${m}">${m}</option>`);
+    }
+
+    // 일 1 ~ 31
+    for (let d = 1; d <= 31; d++) {
+      $('#form-birth-day').append(`<option value="${d}">${d}</option>`);
+    }
+  });
+
+    $(document).ready(function () {
+    $('#form-pw').on('keyup', function () {
+      const pw = $(this).val();
+      const msg = $('#pw-rule-msg');
+
+      if (pw.length >= 8 && pw.length < 15) {
+        msg.text("✅ 사용 가능한 비밀번호 길이입니다.")
+          .removeClass('text-danger')
+          .addClass('text-success');
+      } else {
+        msg.text("❌ 8자 이상 15자 미만으로 입력하세요")
+          .removeClass('text-success')
+          .addClass('text-danger');
+      }
+    });
+  });
+</script>
+
 </html>
