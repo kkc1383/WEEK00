@@ -20,7 +20,6 @@
 </head>
 <body class="text-center">
   <div id="timer-display">00:00</div>
-  <div id="duration-output"></div>
   <div class="timer-btn-group">
     <button class="timer-btn start" onclick="startTimer()">시작</button>
     <button class="timer-btn stop" onclick="stopTimer()">종료</button>
@@ -33,6 +32,10 @@
     <input type="time" id="targetTime" name="targetTime">
     <button class="close-btn" onclick="closeObjectiveTimer()">닫기</button>
   </div>
+  <div class="calender">
+    <a href="{{ url_for('calender') }}">캘린더 연결 링크</a>
+  </div>
+  
   <!--
    초 단위로 변환해야됨
    시작을 누르면 디비로 id 이름 날짜 수면시작시간 저장
