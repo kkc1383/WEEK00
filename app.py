@@ -232,9 +232,11 @@ def calender():
         user_id=decoded['user_id']
         user_name=decoded['user_name']
         
+
         # 여기서부터 이번 달 수면 데이터 처리
-        year=request.args.get('year',type=int)
-        month=request.args.get('month',type=int)
+        now=datetime.utcnow()
+        year=request.args.get('year',default=now.year, type=int)
+        month=request.args.get('month',default=now.month, type=int)
 
         prev_year, prev_month=year,month-1
         if prev_month ==0:
