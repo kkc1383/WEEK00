@@ -1,0 +1,90 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  display: flex;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 40px auto;
+
+  display: flex;
+  align-items: center;
+}
+
+.calendar-wrapper {
+  flex: 2;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-header a {
+  text-decoration: none;
+  font-size: 24px;
+  color: #333;
+  margin: 0 20px;
+}
+
+.month-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.day-cell {
+  aspect-ratio: 1/1;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.day-cell.green {
+  background: #a8e6cf;
+}
+
+.day-cell.red {
+  background: #ff8b94;
+}
+
+.stats-box {
+  flex-shrink: 0;
+  width: 400px;
+  /* 고정 폭 */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+
+}
+
+.stats-box h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+  font-size: 0.95rem;
+}
+
+.stat-row span:last-child {
+  max-width: 100px;
+  /* 우측 값 영역 최대 폭 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
