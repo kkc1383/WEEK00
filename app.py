@@ -220,60 +220,86 @@ def end_sleep():
     )
     return jsonify({'result':'success'})
 
-@app.route('/application/refresh')
-def refresh_duration():
-    return jsonify({'result':'success'})
 
 @app.route('/calender')
 def calender():
-    year=request.args.get('year',type=int)
-    month=request.args.get('month',type=int)
+    token=request.cookies.get('access_token')
+    if not token:
+        return redirect('/')
+    try:
+        decoded=jwt.decode(token, app.config['SECRET_KEY'],algorithms=['HS256'])
+        user_id=decoded['user_id']
+        user_name=decoded['user_name']
+        
+        # 여기서부터 이번 달 수면 데이터 처리
+        year=request.args.get('year',type=int)
+        month=request.args.get('month',type=int)
 
-    if not year or not month:
-        today=datetime.today()
-        year=today.year
-        month=today.month
-    
-    start_date=datetime(year,month,1)
-    days_in_month=monthrange(year,month)[1]
-    end_date=datetime(year,month, days_in_month,23,59,59)
+        prev_year, prev_month=year,month-1
+        if prev_month ==0:
+            prev_year-=1
+            prev_month=12
+        
+        next_year, next_month=year,month+1
+        if next_month==13:
+            next_year+=1
+            next_month==1
 
-    user_id=
-    records=list(db.sleepdata.find({
-        'id':user_id,
-        'sleep_start':{'$gte':start_date,'$lte':end_date}
-    }))
+        if not year or not month:
+            today=datetime.today()
+            year=today.year
+            month=today.month
+        
+        start_date=datetime(year,month,1)
+        first_weekday, days_in_month=monthrange(year,month)
+        end_date=datetime(year,month, days_in_month,23,59,59)
 
-    def parse_duration(s):
-        h,m=map(int,s.split(":"))
-        return h*60+m
-    
-    durations=[parse_duration(r['duration'])for r in records if r.get('duration') and r['duration'] != "0"]
-    achieved_count=sum(1 for r in records if r.get('isAchieved'))
+        my_records=list(db.sleepdata.find({
+            'id':user_id, 'name':user_name,
+            'sleep_start':{'$gte':start_date,'$lte':end_date, }
+        }))
 
-    if durations:
-        avg_min=sum(durations) //len(durations)
-        max_min=max(durations)
-        min_min=min(durations)
-        def to_hhmm(m): return f"{m // 60:02d}:{m%60:02d}"
-        my_stats={
-            'avg_sleep':to_hhmm(avg_min),
-            'goal_count':achieved_count,
-            'max_sleep':to_hhmm(max_min),
-            'min_sleep':to_hhmm(min_min)
-        }
-    else:
-        my_stats{
-            'avg_sleep':"00:00",
-            'goal_count':0,
-            'max_sleep':"00:00",
-            'min_sleep':"00:00",
-        }
-    return render_template('calender.html',
+        def parse_duration(s):
+            h,m=map(int,s.split(":"))
+            return h*60+m
+        
+        my_durations=[parse_duration(r['duration'])for r in my_records if r.get('duration') and r['duration'] != "0"]
+        achieved_count=sum(1 for r in my_records if r.get('isAchieved'))
+
+        all_records=list(db.sleepdata.find({
+            'sleep_start': {'$gte':start_date, '$lte':end_date}
+        }))
+
+        if my_durations:
+            avg_min=sum(my_durations) //len(my_durations)
+            max_min=max(my_durations)
+            min_min=min(my_durations)
+            def to_hhmm(m): return f"{m // 60:02d}:{m%60:02d}"
+            my_stats={
+                'avg_sleep':to_hhmm(avg_min),
+                'goal_count':f"{achieved_count}/{days_in_month}",
+                'max_sleep':to_hhmm(max_min),
+                'min_sleep':to_hhmm(min_min)
+            }
+        else:
+            my_stats={
+                'avg_sleep':"00:00",
+                'goal_count':f"0/{days_in_month}",
+                'max_sleep':"00:00",
+                'min_sleep':"00:00",
+            }
+        return render_template('calender.html',
                            year=year,
                            month=month,
+                           prev_year=prev_year, prev_month=prev_month,
+                           next_year=next_year, next_month=next_month,
+                           first_weekday=first_weekday,
                            days_in_month=days_in_month,
                            my_stats=my_stats)
+    except jwt.ExpiredSignatureError:
+        return "토큰이 만료되었습니다. 다시 로그인해주세요."
+    except jwt.InvalidTokenError:
+        return "유효하지 않은 토큰입니다."
 
 if __name__ == '__main__':  
    print(sys.executable)
