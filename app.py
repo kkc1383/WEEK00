@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from flask import Flask, render_template, jsonify, request, redirect
 from flask.json.provider import JSONProvider
 import jwt
-import datetime
+from datetime import datetime, timedelta
 
 import json
 import sys
@@ -32,6 +32,22 @@ class CustomJSONProvider(JSONProvider):
         return json.loads(s, **kwargs)
     
 app.json = CustomJSONProvider(app)
+
+def get_duration(start,end):
+    fmt="%H:%M"
+    dt1=datetime.strptime(start,fmt)
+    dt2=datetime.strptime(end,fmt)
+
+    if end<=start:
+        end+=timedelta(days=1)
+
+    duration= end-start
+    hours, remainder=divmod(duration.seconds,3600)
+    minutes=remainder//60
+
+    return f"{hours:02d}:{minutes:02d}"
+
+
 
 
 @app.route('/')
@@ -137,7 +153,7 @@ def refresh():
         payload=jwt.decode(refresh_token,app.config['SECRET_KEY'],algorithms=['HS256'])
         user_id=payload['user_id']
         user_name=payload['user_name']
-        stored=db.tokens.find_one({'user_id':user_id})
+        stored=db.tokens.find_one({'user_id':user_id, 'user_name':user_name})
         if stored and stored['refresh_token']==refresh_token:
             new_access_token=jwt.encode({
                 'user_id':user_id,
@@ -166,6 +182,27 @@ def application():
        return "토큰이 만료되었습니다. 다시 로그인해주세요."
    except jwt.InvalidTokenError:
        return "유효하지 않은 토큰입니다."
+
+@app.route('/application/start', methods=['POST'])
+def start_sleep():
+    id_receive=request.form['id_give']
+    name_receive=request.form['name_give']
+    sleep_start_receive=request.form['sleep_start_give']
+    sleepData={
+        'id':id_receive,
+        'name':name_receive,
+        'sleep_start':sleep_start_receive,
+        'sleep_end':0,
+    }
+    db.sleepdata.insert_one(sleepData)
+
+@app.route('/application/end',methods=['POST'])
+def end_sleep():
+    id_receive=request.form['id_give']
+    name_receive=request.form['name_give']
+    sleep_end_receive=request.form['sleep_end_give']
+
+    db.sleepdata.update_one({'id':id_receive,'name':name_receive},{'$set':{'sleep_end':sleep_end_receive}})
 
 
 if __name__ == '__main__':  
