@@ -1,3 +1,4 @@
+from collections import defaultdict
 from bson import ObjectId
 from pymongo import MongoClient
 
@@ -266,9 +267,17 @@ def calender():
         my_durations=[parse_duration(r['duration'])for r in my_records if r.get('duration') and r['duration'] != "0"]
         achieved_count=sum(1 for r in my_records if r.get('isAchieved'))
 
-        all_records=list(db.sleepdata.find({
-            'sleep_start': {'$gte':start_date, '$lte':end_date}
-        }))
+        sleep_status = {}
+        for record in my_records:
+            day = record['sleep_start'].day
+            key = f"{year}-{month:02d}-{day:02d}"
+            if 'isAchieved' in record:
+                if record['isAchieved'] == True:
+                    sleep_status[key] = 'success'
+                elif record['isAchieved'] == False:
+                    sleep_status[key] = 'fail'
+            else:
+                sleep_status[key] = ''  # or 생략 가능 (템플릿에서 get()하면 None)
 
         if my_durations:
             avg_min=sum(my_durations) //len(my_durations)
@@ -288,6 +297,79 @@ def calender():
                 'max_sleep':"00:00",
                 'min_sleep':"00:00",
             }
+        # 총 그룹 불러오기
+        all_records=list(db.sleepdata.find({
+            'sleep_start': {'$gte':start_date, '$lte':end_date}
+        }))
+
+        def parse_duration(dur):  # 그룹 평균 수면 시간
+            h, m = map(int, dur.split(":"))
+            return h * 60 + m
+
+        valid_durations = [parse_duration(r['duration']) for r in all_records if r.get('duration') and r['duration'] != "0"]
+
+        if valid_durations:
+            avg_minutes = sum(valid_durations) // len(valid_durations)
+            avg_sleep = f"{avg_minutes // 60:02d}:{avg_minutes % 60:02d}"
+        else:
+            avg_sleep = "00:00"
+
+        # 그룹 평균 기상시간
+        wakeup_datetimes = [r['sleep_end'] for r in all_records if r.get('sleep_end') and isinstance(r['sleep_end'], datetime)]
+
+        if wakeup_datetimes:
+            avg_seconds = sum(dt.hour * 3600 + dt.minute * 60 for dt in wakeup_datetimes) // len(wakeup_datetimes)
+            avg_hour = avg_seconds // 3600
+            avg_min = (avg_seconds % 3600) // 60
+            avg_wake = f"{avg_hour:02d}:{avg_min:02d}"
+        else:
+            avg_wake = "00:00"
+
+        # 그룹 가장 많이 잔 사람과 시간
+        longest_record = max(
+            (r for r in all_records if r.get('duration') and r['duration'] != "0"),
+            key=lambda r: parse_duration(r['duration']),
+            default=None
+        )
+
+        if longest_record:
+            max_sleeper = longest_record['name']
+            max_duration = longest_record['duration']
+        else:
+            max_sleeper = "N/A"
+            max_duration = "00:00"
+        
+        user_counts = defaultdict(lambda: {'achieved': 0})
+
+        # 각 사용자별 달성 횟수 계산
+        for r in all_records:
+            if not r.get('name'):
+                continue
+            name = r['name']
+            if r.get('isAchieved'):
+                user_counts[name]['achieved'] += 1
+
+        # 가장 많이 달성한 사용자 찾기
+        best_user = None
+        best_count = -1
+
+        for name, counts in user_counts.items():
+            if counts['achieved'] > best_count:
+                best_user = name
+                best_count = counts['achieved']
+
+        # 결과 문자열 만들기
+        if best_user:
+            max_goal = f"{best_user} ({best_count} / {days_in_month})"
+        else:
+            max_goal = "N/A"
+        
+        group_stats = {
+            'avg_sleep': avg_sleep,
+            'avg_wake': avg_wake,
+            'max_sleeper': f"{max_sleeper} ({max_duration})",
+            'max_goal': max_goal
+        }
         return render_template('calender.html',
                            year=year,
                            month=month,
@@ -295,7 +377,9 @@ def calender():
                            next_year=next_year, next_month=next_month,
                            first_weekday=first_weekday,
                            days_in_month=days_in_month,
-                           my_stats=my_stats)
+                           sleep_status=sleep_status,
+                           my_stats=my_stats,
+                           group_stats=group_stats)
     except jwt.ExpiredSignatureError:
         return "토큰이 만료되었습니다. 다시 로그인해주세요."
     except jwt.InvalidTokenError:
