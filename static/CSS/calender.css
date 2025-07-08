@@ -9,11 +9,9 @@ body {
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-  flex: 1;
-  /* 남는 공간 자동 배분 */
+  gap: 4px;
   min-width: 400px;
-  /* 너무 작아지지 않게 */
+  max-width: 700px;
 }
 
 .day {
@@ -33,12 +31,7 @@ body {
 .container {
   display: flex;
   gap: 60px;
-  /* 달력과 통계 사이 간격 */
-  align-items: center;
-  /* ✅ 기본은 가운데 정렬 */
-  max-width: 1200px;
-  /* 최대 너비 제한 */
-  width: auto;
+  align-items: flex-start;
 }
 
 .stats-box {
