@@ -19,14 +19,20 @@
   <link rel="stylesheet" href="../static/CSS/application.css">
 </head>
 <body class="text-center">
-
-  <h1>{{ user_name }}님의 수면 시간</h1>
-  <div id="timer-display">00:00:00</div>
-
-  <button class="btn btn-success btn-timer" onclick="startTimer()">시작</button>
-  <button class="btn btn-danger btn-timer" onclick="stopTimer()">종료</button>
-
-  <div id="duration-output" class="mt-4" style="font-size: 20px;"></div>
+  <div id="timer-display">00:00</div>
+  <div id="duration-output"></div>
+  <div class="timer-btn-group">
+    <button class="timer-btn start" onclick="startTimer()">시작</button>
+    <button class="timer-btn stop" onclick="stopTimer()">종료</button>
+  </div>
+  <div class="timer-label objective_time" onclick="openObjectiveTimer()">
+    목표 기상시간 설정 <span class="arrow">&#9660;</span>
+  </div>
+  <div class="objective_timer">
+    <label for="targetTime">목표 기상시간</label>
+    <input type="time" id="targetTime" name="targetTime">
+    <button class="close-btn" onclick="closeObjectiveTimer()">닫기</button>
+  </div>
   <!--
    초 단위로 변환해야됨
    시작을 누르면 디비로 id 이름 날짜 수면시작시간 저장
@@ -181,6 +187,16 @@
       clearInterval(timer);
       seconds = 0;
       console.log(formatTime(seconds)); // 00:00:00
+    }
+
+    function openObjectiveTimer() {
+      document.querySelector('.objective_time').classList.add('on');
+      document.querySelector('.objective_timer').style.display = 'block';
+    }
+
+    function closeObjectiveTimer() {
+      document.querySelector('.objective_time').classList.remove('on');
+      document.querySelector('.objective_timer').style.display = 'none';
     }
   </script>
 </body>
