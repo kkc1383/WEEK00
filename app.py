@@ -176,7 +176,8 @@ def application():
        decoded=jwt.decode(token, app.config['SECRET_KEY'],algorithms=['HS256'])
        user_id=decoded['user_id']
        user_name=decoded['user_name']
-       return render_template('application.html',user_id=user_id, user_name=user_name)
+       users= list(db.accounts.find({})) # 모든 사용자 정보 가져오기
+       return render_template('application.html',users=users,user_id=user_id, user_name=user_name)
    except jwt.ExpiredSignatureError:
        return "토큰이 만료되었습니다. 다시 로그인해주세요."
    except jwt.InvalidTokenError:
@@ -207,7 +208,7 @@ def start_sleep():
 def end_sleep():
     id_receive=request.form['id_give']
     name_receive=request.form['name_give']
-    user=db.account.find_one({'id':id_receive,'name':name_receive,'sleep_end':0})
+    user=db.sleepdata.find_one({'id':id_receive,'name':name_receive,'sleep_end':0})
     sleep_end=datetime.utcnow()
     duration=get_duration(sleep_end,user['sleep_start'])
     

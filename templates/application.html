@@ -24,6 +24,16 @@
     <input type="time" id="targetTime" name="targetTime">
     <button class="close-btn" onclick="closeObjectiveTimer()">닫기</button>
   </div>
+  <!--사용자 목록-->
+  <div class="user-list">
+    {% for user in users %}
+      <div class="user-card">
+        <div class="profile-box"></div>
+        <div class="user-name">{{ user.name }}</div>
+        <div class="user-timer" id="timer-{{ user.id }}">00 : 00</div>
+      </div>
+    {% endfor %}
+  </div>
 
   <!-- jQuery 로드 -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -138,6 +148,6 @@
       document.querySelector('.objective_time').classList.remove('on');
       document.querySelector('.objective_timer').style.display = 'none';
     }
-  </script>
+  </script> 
 </body>
 </html>
