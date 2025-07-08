@@ -33,10 +33,18 @@
    종료를 누르면 디비로 수면종료시간 총 수면시간 저장
   -->
 
+  <!-- jQuery 로드 -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script>
     let seconds = 0;
     let timer = null;
     let startTime = null;
+    let totalStartTime = null; // totalStartTime 변수 정의
+
+    // 사용자 정보 변수 정의 (Django 템플릿 변수 사용)
+    const userId = "{{ user.id|default:'guest' }}";
+    const userName = "{{ user.username|default:'게스트' }}";
 
     function formatTime(totalSeconds) {
       const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
@@ -57,14 +65,14 @@
       let month = totalStartTime.getMonth() + 1;
       let year = totalStartTime.getFullYear();
       let day = year + '-' + month + '-' + date; // 시작 날짜
-
-      console.log(day);
-
       let hour = totalStartTime.getHours();
       let minute = totalStartTime.getMinutes();
-      let startTime = hour + ':' + minute; // 시작 시간
+      let startTime = hour + ':' + minute; // 시작 시간 (시:분)
 
       console.log(startTime); 
+      console.log(day);
+      console.log('사용자 ID:', userId);
+      console.log('사용자 이름:', userName);
 
       if (timer) return; // 이미 동작 중이면 무시
       seconds = 0;
@@ -74,6 +82,28 @@
         seconds++;
         updateTimerDisplay();
       }, 1000);
+
+      $.ajax({ // 시작버튼을 누르면 사용자아이디 및 사용자이름과 시작시간과 날짜를 디비에 저장
+        type: "POST",
+        url: "/application/post",
+        data: {
+          user_id: userId, // 사용자아이디
+          user_name: userName, // 사용자이름
+          start_day: day,
+          start_time: startTime,
+        },
+        success: function (response) {
+          if (response['result'] === 'success') {
+            alert('성공');
+          } else {
+            alert('실패!');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('AJAX 오류:', error);
+          alert('요청 중 오류가 발생했습니다.');
+        }
+      });
     }
 
     function stopTimer() {
@@ -84,7 +114,7 @@
       const totalEndTime = new Date(); // 종료시간 데이터
 
       let endTime = totalEndTime.getHours() + ':' + totalEndTime.getMinutes();
-      console.log(endTime); // 종료시간
+      console.log(endTime); // 종료시간(시:분)
 
       const totalSeconds = seconds;
       const minutes = Math.floor(totalSeconds / 60);
@@ -93,8 +123,8 @@
       document.getElementById('duration-output').innerText =
         `총 소요 시간: ${formatTime(totalSeconds)}`;
 
-      const totalTakeTime = totalEndTime - totalStartTime;
-      console.log(totalTakeTime); // 총 수면시간
+      const totalTakeTime = totalEndTime - totalStartTime; // 총 소요시간(밀리초)
+
 
       function convertMillisecondsToTime(milliseconds) {
         // 밀리초를 초로 변환
@@ -112,7 +142,27 @@
       }
 
       const timeInHoursMinutes = convertMillisecondsToTime(totalTakeTime);
-      console.log(timeInHoursMinutes); // post 보내야하는 총 소요시간
+      console.log(timeInHoursMinutes); // post 보내야하는 총 소요시간(시:분)
+
+      $.ajax({ // 종료버튼을 누르면 종료시간과 총 소요시간을 디비에 저장
+        type: "POST",
+        url: "/application/post",
+        data: {
+          end_time: endTime,
+          total_time: timeInHoursMinutes,
+        },
+        success: function (response) {
+          if (response['result'] === 'success') {
+            alert('성공');
+          } else {
+            alert('실패!');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('AJAX 오류:', error);
+          alert('요청 중 오류가 발생했습니다.');
+        }
+      });
     }
 
     function resetTimer() {
@@ -120,25 +170,6 @@
       seconds = 0;
       console.log(formatTime(seconds)); // 00:00:00
     }
-
-    $.ajax({
-      type: "POST",
-      url: "/application/post",
-      data: {
-        start_day: day,
-        start_time: startTime,
-        end_time: endTime,
-        total_time: timeInHoursMinutes,
-      },
-      success: function (response) {
-        if (response['result'] === 'success') {
-          alert('성공');
-        } else {
-          alert('실패!');
-        }
-      }
-    });
   </script>
-
 </body>
 </html>
