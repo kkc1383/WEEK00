@@ -123,7 +123,7 @@
         },
         success: function (response) {
           if (response['result'] === 'success') {
-            document.cookie = `access_token=${response['token']}; path=/`;
+            document.cookie = `access_token=${response['access_token']}; path=/`;
             alert('로그인 성공!');
             window.location.href = "/application";
           } else {
