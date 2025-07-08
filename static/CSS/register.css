@@ -1,0 +1,17 @@
+    body {
+      background: #f8f8f8;
+      font-family: 'Stylish', sans-serif;
+    }
+
+    .signup-box {
+      max-width: 500px;
+      margin: 80px auto;
+      padding: 40px 30px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    }
+
+    #pw-match-msg {
+      font-size: 13px;
+    }
