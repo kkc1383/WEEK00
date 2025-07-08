@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>달력 + 이전/다음 버튼</title>
+  <style>
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      max-width: 400px;
+    }
+    .day {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      min-height: 50px;
+    }
+    .day.header {
+      background: #f0f0f0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>
+    <button id="prevBtn">◀</button>
+    <span id="title"></span>
+    <button id="nextBtn">▶</button>
+  </h1>
+
+  <!-- 달력 그리드 -->
+  <div class="calendar" id="calendar"></div>
+
+  <script>
+    const today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth() + 1; // 1~12
+
+    const calendar = document.getElementById('calendar');
+    const title = document.getElementById('title');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function drawCalendar() {
+      // 이전 내용 비우기
+      calendar.innerHTML = '';
+
+      // 요일 헤더 다시 그리기
+      const days = ['일','월','화','수','목','금','토'];
+      for (let d of days) {
+        const cell = document.createElement('div');
+        cell.className = 'day header';
+        cell.innerText = d;
+        calendar.appendChild(cell);
+      }
+
+      // 이번달 정보
+      const firstDay = new Date(year, month - 1, 1).getDay();
+      const daysInMonth = new Date(year, month, 0).getDate();
+
+      title.innerText = `${year}년 ${month}월`;
+
+      // 첫째 주 빈칸
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'day';
+        calendar.appendChild(empty);
+      }
+
+      // 날짜 채우기
+      for (let day = 1; day <= daysInMonth; day++) {
+        const cell = document.createElement('div');
+        cell.className = 'day';
+        cell.innerText = day;
+
+        // 오늘이면 강조
+        if (year === today.getFullYear() && month === today.getMonth() + 1 && day === today.getDate()) {
+          cell.style.background = '#cce5ff';
+        }
+
+        calendar.appendChild(cell);
+      }
+    }
+
+    // ◀ 버튼
+    prevBtn.addEventListener('click', () => {
+      if (month === 1) {
+        year -= 1;
+        month = 12;
+      } else {
+        month -= 1;
+      }
+      drawCalendar();
+    });
+
+    // ▶ 버튼
+    nextBtn.addEventListener('click', () => {
+      if (month === 12) {
+        year += 1;
+        month = 1;
+      } else {
+        month += 1;
+      }
+      drawCalendar();
+    });
+
+    // 처음 달력
+    drawCalendar();
+  </script>
+
+</body>
+</html>

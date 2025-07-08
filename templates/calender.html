@@ -1,91 +1,84 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>이달의 기록</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이달의 기록</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="../static/CSS/calender.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../static/CSS/calender.css" />
 
-  <!-- JS -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="calendar-wrapper">
+        <h1>
+          <!-- ✅ a href로 연/월 이동 -->
+          <a href="/?year={{ prev_year }}&month={{ prev_month }}">◀</a>
+          <span>{{ year }}년 {{ month }}월</span>
+          <a href="/?year={{ next_year }}&month={{ next_month }}">▶</a>
+        </h1>
 
-  <div class="container">
-    <!-- 왼쪽 달력 -->
-    <div class="calendar-wrapper">
-      <div class="calendar-header">
-        <a href="/?year={{ prev_year }}&month={{ prev_month }}">◀</a>
-        <span class="month-title">{{ year }}년 {{ month }}월</span>
-        <a href="/?year={{ next_year }}&month={{ next_month }}">▶</a>
+        <div class="calendar">
+          <!-- 요일 헤더 -->
+          {% for d in ['일', '월', '화', '수', '목', '금', '토'] %}
+            <div class="day header">{{ d }}</div>
+          {% endfor %}
+
+          <!-- 첫째 주 빈칸 -->
+          {% for _ in range(first_weekday) %}
+            <div class="day"></div>
+          {% endfor %}
+
+          <!-- 날짜 셀 -->
+          {% for day in range(1, days_in_month + 1) %}
+            {% set date_key = '%d-%02d-%02d'|format(year, month, day) %}
+            {% set status = sleep_status.get(date_key) %}
+            <div class="day {{ status }}">{{ day }}</div>
+          {% endfor %}
+        </div>
       </div>
 
-      <div class="calendar-grid">
-        <!-- JS로 날짜 셀 생성 -->
+      <!-- 오른쪽 통계 -->
+      <div class="stats-box">
+        <h3>나의 통계</h3>
+        <div class="stat-row">
+          <span>이번달 평균 수면시간:</span>
+          <span>{{ my_stats.avg_sleep }}</span>
+        </div>
+        <div class="stat-row">
+          <span>목표달성 횟수:</span>
+          <span>{{ my_stats.goal_count }}</span>
+        </div>
+        <div class="stat-row">
+          <span>이번달 가장 많이 잔 시간:</span>
+          <span>{{ my_stats.max_sleep }}</span>
+        </div>
+        <div class="stat-row">
+          <span>이번달 가장 적게 잔 시간:</span>
+          <span>{{ my_stats.min_sleep }}</span>
+        </div><br />
+
+        <h3>그룹 통계</h3>
+        <div class="stat-row">
+          <span>이번달 평균 수면시간:</span>
+          <span>{{ group_stats.avg_sleep }}</span>
+        </div>
+        <div class="stat-row">
+          <span>이번달 평균 기상시간:</span>
+          <span>{{ group_stats.avg_wake }}</span>
+        </div>
+        <div class="stat-row">
+          <span>이번달 가장 많이 잔 사람:</span>
+          <span>{{ group_stats.max_sleeper }}</span>
+        </div>
+        <div class="stat-row">
+          <span>이번달 가장 높은 목표 달성자:</span>
+          <span>{{ group_stats.max_goal }}</span>
+        </div>
       </div>
     </div>
-
-<!-- 오른쪽 통계 -->
-<div class="stats-box">
-  <h3>나의 통계</h3>
-  <div class="stat-row">
-    <span>이번달 평균 수면시간:</span>
-    <span>{{ my_stats.avg_sleep }}</span>
-  </div>
-  <div class="stat-row">
-    <span>목표달성 횟수:</span>
-    <span>{{ my_stats.goal_count }}</span>
-  </div>
-  <div class="stat-row">
-    <span>이번달 가장 많이 잔 시간:</span>
-    <span>{{ my_stats.max_sleep }}</span>
-  </div>
-  <div class="stat-row">
-    <span>이번달 가장 적게 잔 시간:</span>
-    <span>{{ my_stats.min_sleep }}</span>
-  </div><br>
-
-  <h3>그룹 통계</h3>
-  <div class="stat-row">
-    <span>이번달 평균 수면시간:</span>
-    <span>{{ group_stats.avg_sleep }}</span>
-  </div>
-  <div class="stat-row">
-    <span>이번달 평균 기상시간:</span>
-    <span>{{ group_stats.avg_wake }}</span>
-  </div>
-  <div class="stat-row">
-    <span>이번달 가장 많이 잔 사람:</span>
-    <span>{{ group_stats.max_sleeper }}</span>
-  </div>
-  <div class="stat-row">
-    <span>이번달 가장 높은 목표 달성자:</span>
-    <span>{{ group_stats.max_goal }}</span>
-  </div>
-</div>
-
-
-  <!-- 달력 셀 JS -->
-  <script>
-    $(document).ready(function() {
-      const daysInMonth = {{ days_in_month }};
-      const sleepStatus = JSON.parse('{{ sleep_status | safe }}');
-
-      for (let day = 1; day <= daysInMonth; day++) {
-        const dateKey = `{{ year }}-{{ '%02d'|format(month) }}-${String(day).padStart(2, '0')}`;
-        const status = sleepStatus[dateKey] || 'none';
-
-        const $cell = $('<div class="day-cell"></div>').text(day);
-        if (status !== 'none') {
-          $cell.addClass(status);
-        }
-
-        $('.calendar-grid').append($cell);
-      }
-    });
-  </script>
-
-</body>
+  </body>
 </html>
