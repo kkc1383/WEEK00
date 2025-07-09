@@ -37,8 +37,12 @@ app.json = CustomJSONProvider(app)
 
 def get_duration(start,end):
 
-    duration= end-start
+    duration=end-start
     total_seconds=duration.total_seconds()
+    print(duration)
+    print(end)
+    print(start)
+    print(total_seconds)
     ''' 
         디버깅에 용이함을 위해 시:분이 저장되어야 할 것을 한 단계 낮추어
         분:초가 저장되게끔 바꾸었음
@@ -215,7 +219,7 @@ def end_sleep():
     if not user:
         return jsonify({'result':'failure'})
     sleep_end=datetime.utcnow()+timedelta(hours=9)
-    duration=get_duration(sleep_end,user['sleep_start'])
+    duration=get_duration(user['sleep_start'],sleep_end)
     
     h,m=map(int,user['wakeup_goal'].split(":"))
     goal=sleep_end.replace(hour=h, minute=m, second=0, microsecond=0)
