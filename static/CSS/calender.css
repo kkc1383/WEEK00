@@ -149,6 +149,12 @@
         justify-content: space-evenly;
       }
 
+      .stats-box .stat-row-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
       .stats-box h3 {
         margin-top: 0;
         font-size: 1.2rem;
