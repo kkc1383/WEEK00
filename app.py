@@ -334,7 +334,7 @@ def calender():
         next_year, next_month=year,month+1
         if next_month==13:
             next_year+=1
-            next_month==1
+            next_month=1
 
         if not year or not month:
             today=datetime.today()

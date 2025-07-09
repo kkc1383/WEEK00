@@ -30,7 +30,7 @@
       <div class="calendar-wrapper">
         <div class="calendar">
           <!-- 요일 헤더 -->
-          {% for d in ['일', '월', '화', '수', '목', '금', '토'] %}
+          {% for d in ['월', '화', '수', '목', '금', '토', '일'] %}
             <div class="day header">{{ d }}</div>
           {% endfor %}
 
@@ -54,37 +54,37 @@
       <div class="stats-box">
         <h3>나의 통계</h3>
         <div class="stat-row">
-          <span>이달 평균 수면시간:</span>
+          <span>{{month}}월 평균 수면시간:</span>
           <span>{{ my_stats.avg_sleep }}</span>
         </div>
         <div class="stat-row">
-          <span>목표달성 횟수:</span>
+          <span>{{month}}월 목표달성 횟수:</span>
           <span>{{ my_stats.goal_count }}</span>
         </div>
         <div class="stat-row">
-          <span>이달 가장 많이 잔 시간:</span>
+          <span>{{month}}월 가장 많이 잔 시간:</span>
           <span>{{ my_stats.max_sleep }}</span>
         </div>
         <div class="stat-row">
-          <span>이달 가장 적게 잔 시간:</span>
+          <span>{{month}}월 가장 적게 잔 시간:</span>
           <span>{{ my_stats.min_sleep }}</span>
         </div><br />
 
         <h3>그룹 통계</h3>
         <div class="stat-row">
-          <span>이달 평균 수면시간:</span>
+          <span>{{month}}월 평균 수면시간:</span>
           <span>{{ group_stats.avg_sleep }}</span>
         </div>
         <div class="stat-row">
-          <span>이달 평균 기상시간:</span>
+          <span>{{month}}월 평균 기상시간:</span>
           <span>{{ group_stats.avg_wake }}</span>
         </div>
         <div class="stat-row">
-          <span>이달 가장 많이 잔 사람:</span>
+          <span>{{month}}월 가장 많이 잔 사람:</span>
           <span>{{ group_stats.max_sleeper }}</span>
         </div>
         <div class="stat-row">
-          <span>이달 가장 높은 목표 달성자:</span>
+          <span>{{month}}월 가장 높은 목표 달성자:</span>
           <span>{{ group_stats.max_goal }}</span>
         </div> 
       </div>
