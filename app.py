@@ -54,6 +54,15 @@ def parse_duration(s):
 
 def to_hhmm(m): return f"{m // 60:02d}:{m%60:02d}"
 
+def is_token_valid(token):
+    try:
+        payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        # 필요하다면 payload 검사 (예: 만료 시간, 사용자 정보 등)
+        return True
+    except jwt.ExpiredSignatureError:
+        return False  # 토큰이 만료됨
+    except jwt.InvalidTokenError:
+        return False  # 서명 위조, 잘못된 토큰 등
 
 @app.route('/')
 def home():
@@ -216,7 +225,7 @@ def logout():
 @app.route('/application') # application으로 라우팅 한 부분
 def application():
    token=request.cookies.get('access_token')
-   if not token:
+   if not token or not is_token_valid(token):
        return redirect('/')
    try:
        decoded=jwt.decode(token, app.config['SECRET_KEY'],algorithms=['HS256'])
@@ -593,6 +602,14 @@ def calender():
         return "토큰이 만료되었습니다. 다시 로그인해주세요."
     except jwt.InvalidTokenError:
         return "유효하지 않은 토큰입니다."
+    
+@app.after_request
+def add_header(response):
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "-1"
+    return response
+
 
 if __name__ == '__main__':  
    print(sys.executable)
