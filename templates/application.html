@@ -21,16 +21,18 @@
 <body class="text-center">
   <div id="timer-display">00:00</div>
   <div class="timer-btn-group">
-    <button class="timer-btn start" onclick="startTimer()">시작</button>
+    <button class="timer-btn start" onclick="openObjectiveTimer()">시작</button>
     <button class="timer-btn stop" onclick="stopTimer()">종료</button>
   </div>
+  <!--
   <div class="timer-label objective_time" onclick="openObjectiveTimer()">
     목표 기상시간 설정 <span class="arrow">&#9660;</span>
   </div>
+  -->
   <div class="objective_timer">
     <label for="targetTime">목표 기상시간</label>
     <input type="time" id="targetTime" name="targetTime">
-    <button class="close-btn" onclick="closeObjectiveTimer()">닫기</button>
+    <button class="close-btn" onclick="closeObjectiveTimer()">확인</button>
   </div>
   <div class="calender">
     <a href="{{ url_for('calender') }}">캘린더 연결 링크</a>
@@ -85,17 +87,19 @@
     }
 
     function closeObjectiveTimer() {
-      // 목표 기상시간 설정 후 닫기 버튼 누르면 목표 기상시간 저장
+      // 목표 기상시간 설정 후 확인 버튼 누르면 목표 기상시간 저장
       inputValue = document.getElementById('targetTime').value;
       wakeup_goal_receive = inputValue;
       
-      //닫기버튼 누르면 팝업창 닫기
+      //확인버튼 누르면 팝업창 닫기
       document.querySelector('.objective_time').classList.remove('on');
       document.querySelector('.objective_timer').style.display = 'none';
+      alert('목표 수면 시간 설정 완료! 수면을 시작합니다!');
+      startTimer();
     }
 
     function startTimer() {
-<<<<<<< HEAD
+      /*
       totalStartTime = new Date();
       const date = totalStartTime.getDate();
       const month = totalStartTime.getMonth() + 1;
@@ -106,7 +110,7 @@
       const startTime = `${hour}:${minute}`;
       let inputValue = null;
       let wakeup_goal_receive = null; // 목표 기상시간 저장
-=======
+      */
       totalStartTime = new Date(); // 시작시간 데이터
 
       let date = totalStartTime.getDate();
@@ -124,7 +128,6 @@
       console.log('사용자 이름:', userName); // 콘솔창에 사용자이름 출력
       console.log('목표 기상시간:', wakeup_goal_receive); // 콘솔창에 목표 기상시간 출력
       console.log('설정된 목표 기상시간:', wakeup_goal_receive);
->>>>>>> 314f5ab820dc493b637930737699449747197486
 
       if (timer) return; // 이미 동작 중이면 무시
       seconds = 0;

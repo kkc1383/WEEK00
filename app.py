@@ -37,12 +37,14 @@ app.json = CustomJSONProvider(app)
 
 def get_duration(start,end):
 
-    if end<=start:
-        end+=timedelta(days=1)
-
     duration= end-start
     total_seconds=duration.total_seconds()
-    hours, remainder=divmod(int(total_seconds),3600)
+    ''' 
+        디버깅에 용이함을 위해 시:분이 저장되어야 할 것을 한 단계 낮추어
+        분:초가 저장되게끔 바꾸었음
+        나중에 실제로 서비스 할때는 60->3600으로 바꾸면 시: 분이 duration에 저장됨
+    '''
+    hours, remainder=divmod(int(total_seconds),60) 
     minutes=remainder//60
 
     return f"{hours:02d}:{minutes:02d}"
@@ -210,6 +212,8 @@ def end_sleep():
     id_receive=request.form['id_give']
     name_receive=request.form['name_give']
     user=db.sleepdata.find_one({'id':id_receive,'name':name_receive,'sleep_end':0})
+    if not user:
+        return jsonify({'result':'failure'})
     sleep_end=datetime.utcnow()
     duration=get_duration(sleep_end,user['sleep_start'])
     
@@ -258,22 +262,47 @@ def calender():
         first_weekday, days_in_month=monthrange(year,month)
         end_date=datetime(year,month, days_in_month,23,59,59)
 
-        my_records=list(db.sleepdata.find({
-            'id':user_id, 'name':user_name,
-            'sleep_start':{'$gte':start_date,'$lte':end_date, }
-        }))
+        # 총 그룹 불러오기
+        all_records_rough=list(db.sleepdata.find({}))
+
+        all_records=[]
+        my_records=[]
+        for record in all_records_rough:
+            sleep_start=record.get('sleep_start')
+            if not sleep_start:
+                continue
+
+            if 0<=sleep_start.hour<10:
+                compare_date=(sleep_start-timedelta(days=1))
+            else:
+                compare_date=sleep_start
+            
+            if start_date<=compare_date<=end_date:
+                all_records.append(record)
+
+                # 그 중에 내 기록 추출하기
+                if record.get('id')==user_id and record.get('name')==user_name:
+                    my_records.append(record)
 
         def parse_duration(s):
             h,m=map(int,s.split(":"))
             return h*60+m
         
+        # 이번달 내 데이터 처리 관련
         my_durations=[parse_duration(r['duration'])for r in my_records if r.get('duration') and r['duration'] != "0"]
         achieved_count=sum(1 for r in my_records if r.get('isAchieved'))
 
         sleep_status = {}
         for record in my_records:
-            day = record['sleep_start'].day
-            key = f"{year}-{month:02d}-{day:02d}"
+            sleep_start=record.get("sleep_start")
+            if not sleep_start:
+                continue
+            if 0<=sleep_start.hour<10:
+                adjusted_date=(sleep_start-timedelta(days=1)).date()
+            else:
+                adjusted_date=sleep_start.date()
+            key=adjusted_date.strftime('%Y-%m-%d')
+
             if 'isAchieved' in record:
                 if record['isAchieved'] == True:
                     sleep_status[key] = 'success'
@@ -300,15 +329,8 @@ def calender():
                 'max_sleep':"00:00",
                 'min_sleep':"00:00",
             }
-        # 총 그룹 불러오기
-        all_records=list(db.sleepdata.find({
-            'sleep_start': {'$gte':start_date, '$lte':end_date}
-        }))
-
-        def parse_duration(dur):  # 그룹 평균 수면 시간
-            h, m = map(int, dur.split(":"))
-            return h * 60 + m
-
+        
+        # 이번달 그룹 내 데이터 처리 관련
         valid_durations = [parse_duration(r['duration']) for r in all_records if r.get('duration') and r['duration'] != "0"]
 
         if valid_durations:
