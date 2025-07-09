@@ -159,6 +159,7 @@
       .stats-box .stat-row-wrapper .point {
         font-weight: 700;
         color: #1d1d1d;
+        font-size: 1.2rem;
       }
       .stats-box h3 {
         margin-top: 0;
