@@ -39,7 +39,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 20px 40px;
+        padding: 15px 40px;
         z-index: 999;
         /* 카테고리바보다 위로 올리고 싶으면 */
       }
@@ -97,7 +97,7 @@
         justify-content: center;
         align-items: center;
         gap: 20px;
-        margin-bottom: 30px;
+        margin-top: 40px;
         width: 100%;
       }
 
