@@ -121,6 +121,7 @@
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    width: 100%;
   }
 
   .day {
@@ -522,9 +523,14 @@
 
   @media (max-width: 768px) {
 
-    body {
+    body, html {
       margin: 0;
       padding: 20px;
+      font-size: 14px;
+    }
+    .wrapper {
+      width: auto;
+      margin: 0 20px;
     }
     .user-bar {
       position: fixed;
@@ -619,6 +625,7 @@
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      width: calc(100% - 40px);
     }
 
     .day {
