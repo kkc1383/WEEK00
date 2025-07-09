@@ -126,8 +126,8 @@
 
       .category-bar {
         position: fixed;
-        top: 0;
-        /* 화면 맨 위 고정 */
+        bottom: 0;
+        /* 화면 맨 아래 고정 */
         left: 0;
         width: 100%;
         /* 가로 100% */
