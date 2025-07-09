@@ -242,17 +242,6 @@ def get_sleep_users_data():
             sleep_status[user['name']]="00:00"
     return sleep_status
 
-@app.route('/application/refresh',methods=['POST'])
-def refresh_user_data():
-    user_id=request.form['user_id']
-    user_name=request.form['user_name']
-    sleep_users_data=get_sleep_users_data()
-    return render_template('application.html',
-                           users=sleep_users_data,
-                           user_id=user_id,
-                           user_name=user_name
-                           )
-
 @app.route('/application/status',methods=['POST'])
 def get_status():
     user_id=request.form['user_id']

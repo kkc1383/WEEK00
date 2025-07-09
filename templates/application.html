@@ -131,23 +131,7 @@
       })
     }
     
-
-    function fetchSleepStatus(){
-      $.ajax({
-        type:"POST",
-        url:'application/refresh',
-        data:{"user_id":userId,"user_name":userName},
-        success: function(res){
-          if(res.result==="success"){
-            alert('1분 불러오기 완료!')
-          }
-          else{
-            alert('1분 불러오기 실패')
-          }
-        }
-      })
-    }
-    setInterval(fetchSleepStatus,60000);
+    setInterval(()=>location.reload(),60000);
 
     function formatTime(totalSeconds) {
       const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
