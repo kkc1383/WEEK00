@@ -68,6 +68,23 @@
       </section><!--user-list-wrapper-->
     </div>
   </div>
+  <!-- 목표 수면 팝업 -->
+<div class="custom-popup" id="sleep-popup" style="display:none;">
+  <div class="popup-content">
+    <p class="popup-title">주무시겠어요?</p>
+    <p class="popup-diff">
+      어제보다 <span class="highlight">{{ time_diff }}</span> 더 
+      <span class="highlight">{{ sleep_trend }}</span> 주무시네요.
+    </p>
+    <p class="popup-avg">
+      최근 3일간 그룹 평균 취침시간은 <span class="highlight">{{ group_avg }}</span> 입니다.
+    </p>
+    <div class="popup-btn-group">
+      <button class="yes-btn" onclick="confirmSleep()">네</button>
+      <button class="no-btn" onclick="closeSleepPopup()">아니오</button>
+    </div>
+  </div>
+</div>
   
   <!--
    초 단위로 변환해야됨
@@ -151,20 +168,32 @@
     }
 
     function closeObjectiveTimer() {
-      // 목표 기상시간 설정 후 확인 버튼 누르면 목표 기상시간 저장
       inputValue = document.getElementById('targetTime').value;
-      
-      if(!inputValue){
+
+      if (!inputValue) {
         alert('목표 수면 시간 설정 실패! 다시 설정 해주세요~!');
         return;
       }
-      //확인버튼 누르면 팝업창 닫기
+
       document.querySelector('.objective_time').classList.remove('on');
       document.querySelector('.objective_timer').style.display = 'none';
-    
-      alert('목표 수면 시간 설정 완료! 수면을 시작합니다!');
+
+      openSleepPopup();
+    }
+
+    function openSleepPopup() {
+      document.getElementById('sleep-popup').style.display = 'flex';
+    }
+
+    function closeSleepPopup() {
+      document.getElementById('sleep-popup').style.display = 'none';
+    }
+
+    function confirmSleep() {
+      closeSleepPopup();
       startTimer(inputValue);
     }
+
 
     function startTimer(wakeup_goal) {
       totalStartTime = new Date();

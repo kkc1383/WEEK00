@@ -354,6 +354,16 @@ h1 img {
     margin: 0 auto;            /* 가운데 정렬 */
     transform: translateX(10%); /* 가운데 미세 조정 */
   }
+.user-card .status-box.on::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0; 
+  width: 100%;
+  height: 40%;
+  border-radius: 0.75em !important;
+  background-color: #FF3333;
+}
 .user-card  .user-timer {
   color: #1d1d1d;
   font-weight: 700;
@@ -377,3 +387,46 @@ bottom: 35px;
     margin-bottom: 10em;
   }
 }
+  /* 수면 팝업 */
+
+.custom-popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  background: #fff;
+  padding: 60px;
+  border-radius: 10px;
+  text-align: center;
+  width: 500px;
+  color: #1d1d1d;
+}
+
+.popup-title {
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.highlight {
+  font-weight: bold;
+  color: #00cc66;  /* 강조 색상: 초록 */
+  font-size: 18px;
+}
+
+.popup-btn-group button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.yes-btn { background: #00cc66; color: #fff; }
+.no-btn { background: #ccc; }
