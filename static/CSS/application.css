@@ -5,6 +5,36 @@ body {
     padding: 0;
     margin: 0 auto;
   }
+
+  
+      .user-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 40px;
+        z-index: 999;
+        /* 카테고리바보다 위로 올리고 싶으면 */
+      }
+
+      .user-name {
+        margin: 0;
+        font-size: 17pt;
+      }
+
+      .btn-logout {
+        padding: 8px 16px;
+        border: none;
+        background: #05D182;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+      }
   /* 리셋 */
   button{
     background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer
