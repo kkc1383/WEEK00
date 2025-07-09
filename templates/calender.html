@@ -77,6 +77,12 @@
         <div class="stat-row">
           <span>이번달 가장 높은 목표 달성자:</span>
           <span>{{ group_stats.max_goal }}</span>
+        </div> 
+        <div class="calender">
+          <a href="{{ url_for('calender') }}">캘린더 연결 링크</a>
+        </div>
+        <div class="log-out">
+          <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
         </div>
       </div>
     </div>

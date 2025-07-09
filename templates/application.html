@@ -51,6 +51,10 @@
       </div>
     {% endfor %}
   </div>
+  <div class="category-bar">
+      <a href="{{ url_for('application') }}" class="category-btn">내 기록</a>
+      <button class="category-btn disabled">이달의 기록</a>
+  </div>
   
   <!--
    초 단위로 변환해야됨
@@ -133,16 +137,20 @@
     function closeObjectiveTimer() {
       // 목표 기상시간 설정 후 확인 버튼 누르면 목표 기상시간 저장
       inputValue = document.getElementById('targetTime').value;
-      wakeup_goal_receive = inputValue;
       
+      if(!inputValue){
+        alert('목표 수면 시간 설정 실패! 다시 설정 해주세요~!');
+        return;
+      }
       //확인버튼 누르면 팝업창 닫기
       document.querySelector('.objective_time').classList.remove('on');
       document.querySelector('.objective_timer').style.display = 'none';
+    
       alert('목표 수면 시간 설정 완료! 수면을 시작합니다!');
-      startTimer();
+      startTimer(inputValue);
     }
 
-    function startTimer() {
+    function startTimer(wakeup_goal) {
       totalStartTime = new Date();
       const date = totalStartTime.getDate();
       const month = totalStartTime.getMonth() + 1;
@@ -151,8 +159,6 @@
       const hour = totalStartTime.getHours();
       const minute = totalStartTime.getMinutes();
       const startTime = `${hour}:${minute}`;
-      let inputValue = null;
-      let wakeup_goal_receive = null; // 목표 기상시간 저장
 
       if (timer) return; // 이미 동작 중이면 무시
       seconds = 0;
@@ -160,14 +166,13 @@
         seconds++;
         updateTimerDisplay();
       }, 1000);
-
       $.ajax({ // 시작버튼을 누르면 사용자아이디 및 사용자이름과 시작시간과 날짜를 디비에 저장
         type: "POST",
         url: "/application/start",
         data: {
           'id_give': userId, // 사용자아이디
           'name_give': userName, // 사용자이름
-          'wakeup_goal_receive': wakeup_goal_receive // 목표 기상시간
+          'wakeup_goal_receive': wakeup_goal // 목표 기상시간
         },
         success: function (response) {
           if (response['result'] === 'success') {
