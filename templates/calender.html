@@ -12,10 +12,20 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
-            <div class="log-out">
+    <script>
+        function logout() {
+        $.post("/logout", function () {
+          alert('로그아웃 성공!')
+          window.location.href='/'
+        }).fail(function () {
+          alert("로그아웃 중 오류가 발생했습니다.");
+        });
+      }
+    </script>
+        <div class="log-out">
           <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
         </div>
-    
+        
     <div class="category-bar">
       <a href="{{ url_for('application') }}" class="category-btn">오늘의 기록</a>
       <button class="category-btn disabled">이달의 기록</a>

@@ -91,7 +91,7 @@
     function logout() {
       $.post("/logout", function () {
         alert('로그아웃 성공!')
-        window.location.href = "/";
+        window.location.href='/'
       }).fail(function () {
         alert("로그아웃 중 오류가 발생했습니다.");
       });
