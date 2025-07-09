@@ -7,6 +7,10 @@ body {
     justify-content: center;
     align-items: center;
     font-family: 'Noto Sans KR', sans-serif;
+    margin: 0 auto;
+  }
+  wrapper {
+    width: 1440px;
   }
   section {
     display: flex;
@@ -14,6 +18,9 @@ body {
     justify-content: center;
     align-items: center;
     gap: 2em;
+  }
+  section.timer-wrapper {
+    margin: 3em 0;
   }
 #timer-display {
     font-size: 64px;
