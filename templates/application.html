@@ -95,7 +95,7 @@
       </p>
     {% endif %}
     <div class="popup-btn-group">
-      <button class="yes-btn" onclick="onSleepComfirm()">네</button>
+      <button class="yes-btn" onclick="onSleepConfirm()">네</button>
       <button class="no-btn" onclick="closeSleepPopup()">아니오</button>
     </div>
   </div>
@@ -120,7 +120,7 @@
       </p>
     {% endif %}
     <div class="popup-btn-group">
-      <button class="yes-btn" onclick="onWakeComfirm()">네</button>
+      <button class="yes-btn" onclick="onWakeConfirm()">네</button>
       <button class="no-btn" onclick="closeWakePopup()">아니오</button>
     </div>
   </div>
@@ -216,9 +216,10 @@
     function closeSleepPopup() {
       document.getElementById('sleep-popup').style.display = 'none';
     }
-    function onSleepComfirm(){
+    function onSleepConfirm(){
       closeSleepPopup();
       startTimer();
+      setTimeout(refreshStatusMessage,500);
     }
     function openWakePopup() {
       if(!isSleeping) return;
@@ -228,15 +229,16 @@
     function closeWakePopup() {
       document.getElementById('wake-popup').style.display = 'none';
     }
-    function onWakeComfirm(){
+    function onWakeConfirm(){
       closeWakePopup();
       stopTimer();
+      setTimeout(refreshStatusMessage,500);
     }
     function refreshStatusMessage(){
-      $.post('/application/status_partial',{
-        user_id,userId,
+      $.post('/application/status',{
+        user_id:userId,
         user_name:userName
-      }, fuction(html){
+      }, function(html){
         $('#status-message').html(html);
         isSleeping=document.body.dataset.sleeping==='true';
       });
@@ -267,9 +269,7 @@
         },
         success: function (response) {
           if (response['result'] === 'success') {
-            alert('성공');
-          } else {
-            alert('이미 수면이 시작되었습니다!');
+            refreshStatusMessage();
           }
         },
         error: function(xhr, status, error) {
@@ -323,6 +323,7 @@
         },
         success: function (response) {
           if (response['result'] === 'success') {
+            refreshStatusMessage();
             //alert('성공');
           } else {
             alert('실패!');

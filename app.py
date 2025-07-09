@@ -2,7 +2,7 @@ from collections import defaultdict
 from bson import ObjectId
 from pymongo import MongoClient
 
-from flask import Flask, render_template, jsonify, request, redirect, make_response
+from flask import Flask, render_template, jsonify, render_template_string, request, redirect, make_response
 from flask.json.provider import JSONProvider
 from datetime import datetime, timedelta
 import jwt
@@ -262,12 +262,12 @@ def application():
            else:
                 wake_trend="늦게"
 
-           sleeptime_gap=(3600*24)-sleeptime_rough
+           sleeptime_gap=abs((3600*24)-sleeptime_rough)
            sleep_hours, sleep_remainder=divmod(int(sleeptime_gap),3600) 
            sleep_minutes=sleep_remainder//60 
            sleeptime_diff=f"{sleep_hours}시간 {sleep_minutes}분"
 
-           waketime_gap=(3600*24)-waketime_rough
+           waketime_gap=abs((3600*24)-waketime_rough)
            wake_hours, wake_remainder=divmod(int(waketime_gap),3600) 
            wake_minutes=wake_remainder//60 
            waketime_diff=f"{wake_hours}시간 {wake_minutes}분"
@@ -330,27 +330,40 @@ def get_sleep_users_data(user_id):
             sleep_status[user['name']]="00:00"
     return sleep_status
 
-# @app.route('/application/status',methods=['POST'])
-# def get_status():
-#     user_id=request.form['user_id']
-#     user_name=request.form['user_name']
+@app.route('/application/status',methods=['POST'])
+def get_status():
+    user_id=request.form['user_id']
+    user_name=request.form['user_name']
 
-#     record=db.sleepdata.find_one({
-#         'id':user_id,
-#         'name':user_name,
-#         'sleep_end':0
-#     })
-#     if record and 'sleep_start' in record:
-#         sleep_start=record['sleep_start']
-#         now=datetime.utcnow()+timedelta(hours=9)
-#         elapsed_seconds=int((now-sleep_start).total_seconds())
-#         return jsonify({
-#             'result':'success',
-#             'status':'sleeping',
-#             'elapsed_seconds':elapsed_seconds,
-#         })
-#     else:
-#         return jsonify({'result':"failure"})
+    record=db.sleepdata.find_one({
+        'id':user_id,
+        'name':user_name,
+        'sleep_end':0
+    })
+    if record and 'sleep_start' in record:
+        is_sleeping=True
+        sleep_start=record['sleep_start']
+        now=datetime.utcnow()+timedelta(hours=9)
+        elapsed_seconds=int((now-sleep_start).total_seconds())
+    else:
+        is_sleeping=False
+        elapsed_seconds=0
+
+    template = """
+    {% if is_sleeping %}
+      <h2>휴식을 종료할까요?</h2>
+      <h3>좋은 아침입니다! 오늘 하루도 화이팅!</h3>
+      <script>document.body.dataset.sleeping = 'true';</script>
+    {% else %}
+      <h2>휴식을 시작할까요?</h2>
+      <h3>오늘 하루도 고생하셨습니다!</h3>
+      <script>document.body.dataset.sleeping = 'false';</script>
+    {% endif %}
+    """
+    
+    return render_template_string(template,
+                               is_sleeping=is_sleeping,
+                               elapsed_seconds=elapsed_seconds)
 
 @app.route('/application/refresh',methods=['POST'])
 def refresh_data():
