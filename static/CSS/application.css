@@ -1,98 +1,129 @@
 body {
-    background: #d2d2d2;
-    color: #fff;
-    font-family: 'Noto Sans KR', sans-serif;
-    padding: 0;
-    margin: 0 auto;
-  }
+  background: #d2d2d2;
+  color: #fff;
+  font-family: 'Noto Sans KR', sans-serif;
+  padding: 0;
+  margin: 0 auto;
+}
 
-  
-      .user-bar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background: #fff;
-        border-bottom: 1px solid #ddd;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 40px;
-        z-index: 999;
-        /* 카테고리바보다 위로 올리고 싶으면 */
-      }
 
-      .user-name {
-        margin: 0;
-        font-size: 17pt;
-      }
+.user-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 40px;
+  z-index: 999;
+  /* 카테고리바보다 위로 올리고 싶으면 */
+}
 
-      .btn-logout {
-        padding: 8px 16px;
-        border: none;
-        background: #05D182;
-        color: #fff;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-  /* 리셋 */
-  button{
-    background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer
-  }
-   a {
-    color: #fff; text-decoration: none; outline: none} a:hover, a:active {text-decoration: none; color:#fff; background-color:#f59000;
-  }
+.user-bar .user-name {
+  flex: 1;               /* 핵심! */
+  text-align: center;    /* 가운데 정렬 */
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap;   /* 줄바꿈 방지 */
+}
 
-  .wrapper {
-    width: 1440px;
-    margin: 0 auto;
-  }
+.user-name {
+  color: #1d1d1d;
+}
 
-  section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2em;
-  }
-  section.timer-wrapper {
-    margin: 3em 0;
-    position: relative;
-  }
-  section.timer-wrapper .log-out {
-    position: absolute;
-    top: 30px;
-    right: 240px;
-    background-color: #05D182;
-    border-radius: 15px;
-    padding: 8px 20px;
-  }
-  section.timer-wrapper .log-out .btn-logout {
-    color: #fff;
-    font-weight: 700;
-  }
+.btn-logout {
+  padding: 8px 16px;
+  border: none;
+  background: #05D182;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 리셋 */
+button {
+  background: inherit;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  overflow: visible;
+  cursor: pointer
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+  outline: none
+}
+
+a:hover,
+a:active {
+  text-decoration: none;
+  color: #fff;
+  background-color: #f59000;
+}
+
+.wrapper {
+  width: 1440px;
+  margin: 0 auto;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+}
+
+section.timer-wrapper {
+  margin: 3em 0;
+  position: relative;
+}
+
+section.timer-wrapper .log-out {
+  position: absolute;
+  top: 30px;
+  right: 240px;
+  background-color: #05D182;
+  border-radius: 15px;
+  padding: 8px 20px;
+}
+
+section.timer-wrapper .log-out .btn-logout {
+  color: #fff;
+  font-weight: 700;
+}
+
 #timer-display {
-    font-size: 64px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    margin: 60px 0 30px 0;
-  }
+  font-size: 64px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin: 60px 0 30px 0;
+}
+
 h1 {
-    width: 2em;
-    height: 2em;
-    margin-bottom: 1em;
-  }
+  width: 2em;
+  height: 2em;
+  margin-bottom: 1em;
+}
+
 h1 img {
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
+
 .timer-btn-group {
   display: flex;
   background: #fff;
   border-radius: 40px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   margin-bottom: 40px;
   width: 370px;
   max-width: 90vw;
@@ -100,6 +131,7 @@ h1 img {
   align-items: center;
   justify-content: center;
 }
+
 .timer-btn {
   flex: 1;
   font-size: 28px;
@@ -111,16 +143,19 @@ h1 img {
   transition: background 0.2s, color 0.2s;
   height: 100%;
 }
+
 .timer-btn.start {
   background: #05D182;
   color: #fff;
   border-radius: 40px 0 0 40px;
 }
+
 .timer-btn.stop {
   background: #fff;
   color: #888;
   border-radius: 0 40px 40px 0;
 }
+
 .timer-label {
   font-size: 22px;
   font-weight: 600;
@@ -133,11 +168,13 @@ h1 img {
   justify-content: center;
   cursor: pointer;
 }
+
 .timer-label .arrow {
   font-size: 18px;
   margin-left: 8px;
   vertical-align: middle;
 }
+
 /* 목표 시간 설정 팝업 */
 .objective_timer {
   display: none;
@@ -152,8 +189,9 @@ h1 img {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 100;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
+
 .objective_timer label,
 .objective_timer input {
   display: block;
@@ -162,6 +200,7 @@ h1 img {
   color: #1d1d1d;
   font-size: 18px;
 }
+
 .objective_timer input {
   background: #fff;
   border: 1px solid #444;
@@ -169,6 +208,7 @@ h1 img {
   padding: 8px 12px;
   color: #1d1d1d;
 }
+
 .objective_timer .close-btn {
   background: #19d98b;
   color: #fff;
@@ -179,9 +219,11 @@ h1 img {
   cursor: pointer;
   margin-top: 10px;
 }
+
 .objective_time:hover {
   color: rgba(19, 217, 139, 0.8);
 }
+
 .category-bar {
   position: fixed;
   bottom: 0;
@@ -228,167 +270,198 @@ h1 img {
   background: #d2d2d2;
   /* hover에도 색 고정 */
 }
-.user-list{
+
+.user-list {
   display: flex;
   flex-wrap: wrap;
 }
+
 .user-list .user-card {
   width: 6em;
   height: 11em;
 }
-.user-list .user-card .status-box.on{
+
+.user-list .user-card .status-box.on {
   background: #05D182;
   border-radius: 15px;
 }
-  h1 img {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-  .timer-btn-group {
-    display: flex;
-    background: #fff;
-    border-radius: 40px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    margin-bottom: 40px;
-    width: 370px;
-    max-width: 90vw;
-    height: 70px;
-    align-items: center;
-    justify-content: center;
-  }
-  .timer-btn {
-    flex: 1;
-    font-size: 28px;
-    font-weight: 700;
-    padding: 18px 0;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    height: 100%;
-  }
-  .timer-btn.start {
-    background: #19d98b;
-    color: #fff;
-    border-radius: 40px 0 0 40px;
-  }
-  .timer-btn.stop {
-    background: #fff;
-    color: #888;
-    border-radius: 0 40px 40px 0;
-  }
-  .timer-label {
-    font-size: 22px;
-    font-weight: 600;
-    margin-top: 30px;
-    margin-bottom: 10px;
-    color: #fff;
-    letter-spacing: -1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  .timer-label .arrow {
-    font-size: 18px;
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-  /* 목표 시간 설정 팝업 */
-  .objective_timer {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-    border-radius: 20px;
-    padding: 30px 20px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 100;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-  }
-  .objective_timer label,
-  .objective_timer input {
-    display: block;
-    width: 100%;
-    margin-bottom: 16px;
-    color: #1d1d1d;
-    font-size: 18px;
-  }
-  .objective_timer input {
-    background: #fff;
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 8px 12px;
-    color: #1d1d1d;
-  }
-  .objective_timer .close-btn {
-    background: #19d98b;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 24px;
-    font-size: 18px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  .objective_time:hover {
-    color: rgba(19, 217, 139, 0.8);
-  }
-  .user-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 0.75em;
-    width: 49em;
-    height: auto;
-    position: relative;
-    margin-bottom: 10em;
-  }
-  .user-card {
-    color: #3d3d3d;
-    position: relative;
-  }
-  .user-card .status-box {
-    font-size: 0;
-    line-height: 0;
-    text-align: center;
-  }
-  .user-card .status-box.on::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 80%;                /* 정사각형 비율 유지 */
-    aspect-ratio: 1 / 1;       /* 가로세로 비율을 1:1로 맞춤 */
-    background-color: #FF3333;
-    border-radius: 12px;       /* 꼭짓점 둥글게 */
-    margin: 0 auto;            /* 가운데 정렬 */
-    transform: translateX(10%); /* 가운데 미세 조정 */
-  }
-  .user-card .status-box.off::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 80%;                /* 정사각형 비율 유지 */
-    aspect-ratio: 1 / 1;       /* 가로세로 비율을 1:1로 맞춤 */
-    background: url(../images/user_wakeup_status.png) no-repeat center center / cover;
-    border-radius: 12px;       /* 꼭짓점 둥글게 */
-    margin: 0 auto;            /* 가운데 정렬 */
-    transform: translateX(10%); /* 가운데 미세 조정 */
-  }
+
+h1 img {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.timer-btn-group {
+  display: flex;
+  background: #fff;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 40px;
+  width: 370px;
+  max-width: 90vw;
+  height: 70px;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-btn {
+  flex: 1;
+  font-size: 28px;
+  font-weight: 700;
+  padding: 18px 0;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  height: 100%;
+}
+
+.timer-btn.start {
+  background: #19d98b;
+  color: #fff;
+  border-radius: 40px 0 0 40px;
+}
+
+.timer-btn.stop {
+  background: #fff;
+  color: #888;
+  border-radius: 0 40px 40px 0;
+}
+
+.timer-label {
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  color: #fff;
+  letter-spacing: -1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.timer-label .arrow {
+  font-size: 18px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* 목표 시간 설정 팝업 */
+.objective_timer {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+.objective_timer label,
+.objective_timer input {
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
+  color: #1d1d1d;
+  font-size: 18px;
+}
+
+.objective_timer input {
+  background: #fff;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #1d1d1d;
+}
+
+.objective_timer .close-btn {
+  background: #19d98b;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 24px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.objective_time:hover {
+  color: rgba(19, 217, 139, 0.8);
+}
+
+.user-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75em;
+  width: 49em;
+  height: auto;
+  position: relative;
+  margin-bottom: 10em;
+}
+
+.user-card {
+  color: #3d3d3d;
+  position: relative;
+}
+
+.user-card .status-box {
+  font-size: 0;
+  line-height: 0;
+  text-align: center;
+}
+
 .user-card .status-box.on::after {
   content: '';
   position: absolute;
   top: 0;
-  left: 0; 
+  left: 0;
+  width: 80%;
+  /* 정사각형 비율 유지 */
+  aspect-ratio: 1 / 1;
+  /* 가로세로 비율을 1:1로 맞춤 */
+  background-color: #FF3333;
+  border-radius: 12px;
+  /* 꼭짓점 둥글게 */
+  margin: 0 auto;
+  /* 가운데 정렬 */
+  transform: translateX(10%);
+  /* 가운데 미세 조정 */
+}
+
+.user-card .status-box.off::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80%;
+  /* 정사각형 비율 유지 */
+  aspect-ratio: 1 / 1;
+  /* 가로세로 비율을 1:1로 맞춤 */
+  background: url(../images/user_wakeup_status.png) no-repeat center center / cover;
+  border-radius: 12px;
+  /* 꼭짓점 둥글게 */
+  margin: 0 auto;
+  /* 가운데 정렬 */
+  transform: translateX(10%);
+  /* 가운데 미세 조정 */
+}
+
+.user-card .status-box.on::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 80%;
   aspect-ratio: 1 / 1;
   background: url(../images/user_sleep_status.png) no-repeat center center / cover;
@@ -396,16 +469,19 @@ h1 img {
   margin: 0 auto;
   transform: translateX(10%);
 }
-.user-card  .user-timer {
+
+.user-card .user-timer {
   color: #1d1d1d;
   font-weight: 700;
   font-size: 1.5em;
 }
+
 .user-card .inner-text {
-position: absolute;
-left: 12px;
-bottom: 35px;
+  position: absolute;
+  left: 12px;
+  bottom: 35px;
 }
+
 @media (max-width: 768px) {
   .user-list {
     display: flex;
@@ -419,12 +495,16 @@ bottom: 35px;
     margin-bottom: 10em;
   }
 }
-  /* 수면 팝업 */
+
+/* 수면 팝업 */
 
 .custom-popup {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: none;
   justify-content: center;
   align-items: center;
@@ -448,7 +528,8 @@ bottom: 35px;
 
 .highlight {
   font-weight: bold;
-  color: #00cc66;  /* 강조 색상: 초록 */
+  color: #00cc66;
+  /* 강조 색상: 초록 */
   font-size: 18px;
 }
 
@@ -460,5 +541,11 @@ bottom: 35px;
   font-size: 16px;
 }
 
-.yes-btn { background: #00cc66; color: #fff; }
-.no-btn { background: #ccc; }
+.yes-btn {
+  background: #00cc66;
+  color: #fff;
+}
+
+.no-btn {
+  background: #ccc;
+}

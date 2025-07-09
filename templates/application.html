@@ -21,13 +21,19 @@
 <body class="text-center">
           <div class="user-bar">
                   <img src="../static/images/compassicon.jpg" alt="로고" width="30" height="30" />
-                  <h1 class="user-name">{{ user_name }}님 환영합니다</h1>
-
+                  <div class="user-name">{{ user_name }}님 환영합니다</div>
           <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
         </div>
   <div id="wrap">
     <div class="wrapper">
       <section class="timer-wrapper">
+        <h1 class="logo">
+          <img src="../static/images/logo.svg" alt="logo">
+        </h1>
+        <h2 class="user-name">{{ user_name }}님 환영합니다</h2>
+        <div class="log-out">
+          <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
+        </div>
         <a href="/application/calculate">
           <button type="button">계산하기</button>
         </a>
