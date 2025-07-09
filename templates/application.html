@@ -31,10 +31,18 @@
     <label for="targetTime">목표 기상시간</label>
     <input type="time" id="targetTime" name="targetTime">
     <button class="close-btn" onclick="closeObjectiveTimer()">확인</button>
-    <button type="button" class="close-btn">디버깅버튼</button>
   </div>
   <div class="calender">
     <a href="{{ url_for('calender') }}">캘린더 연결 링크</a>
+  </div>
+  <div class="user-list">
+    {% for user in users %}
+      <div class="user-card">
+        <div class="profile-box"></div>
+        <div class="user-name">{{ user.name }}</div>
+        <div class="user-timer" id="timer-{{ user.id }}">00 : 00</div>
+      </div>
+    {% endfor %}
   </div>
   
   <!--
