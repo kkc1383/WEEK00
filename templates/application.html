@@ -21,42 +21,45 @@
 <body class="text-center">
   <div id="wrap">
     <div class="wrapper">
-      <h1 class="logo">
-        <img src="../static/images/logo.svg" alt="logo">
-      </h1>
-      <h2 class="user-name">{{ user_name }}님 환영합니다</h2>
-      <div class="log-out">
-        <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
-      </div>
-      <div id="timer-display">00:00:00</div>
-      <div class="timer-btn-group">
-        <button class="timer-btn start" onclick="openObjectiveTimer()">시작</button>
-        <button class="timer-btn stop" onclick="stopTimer()">종료</button>
-      </div>
-      <div class="calender">
-        <a href="{{ url_for('calender') }}">캘린더 연결 링크</a>
-      </div>
-      <div class="timer-label objective_time">
-      <!--  목표 기상시간 설정 <span class="arrow">&#9660;</span> -->
-      </div>
-      <div class="objective_timer">
-        <label for="targetTime">목표 기상시간</label>
-        <input type="time" id="targetTime" name="targetTime">
-        <button class="close-btn" onclick="closeObjectiveTimer()">확인</button>
-      </div>
-      <div class="user-list">
-        {% for name, duration in users.items() %}
-          <div class="user-card">
-            <div class="profile-box on">상태박스</div>
-            <div class="user-name">{{ name }}</div>
-            <div class="user-timer">{{duration}}</div>
+      <section class="timer-wrapper">
+        <h1 class="logo">
+          <img src="../static/images/logo.svg" alt="logo">
+        </h1>
+        <h2 class="user-name">{{ user_name }}님 환영합니다</h2>
+        <div class="log-out">
+          <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
+        </div>
+        <div id="timer-display">00:00:00</div>
+        <div class="timer-btn-group">
+          <button class="timer-btn start" onclick="openObjectiveTimer()">시작</button>
+          <button class="timer-btn stop" onclick="stopTimer()">종료</button>
+        </div>
+      </section><!-- timer-wrapper -->
+      <section class="objective-timer-wrapper">
+        <div class="timer-label objective_time">
+          <!--  목표 기상시간 설정 <span class="arrow">&#9660;</span> -->
           </div>
-        {% endfor %}
-      </div>
-      <div class="category-bar">
-          <button class="category-btn disabled">오늘의 기록</button>
-          <a href="{{ url_for('calender') }}" class="category-btn">이달의 기록</a>
-      </div>
+          <div class="objective_timer">
+            <label for="targetTime">목표 기상시간</label>
+            <input type="time" id="targetTime" name="targetTime">
+            <button class="close-btn" onclick="closeObjectiveTimer()">확인</button>
+          </div>
+      </section><!-- objective-timer-wrapper -->
+      <section class="user-list-wrapper">
+        <div class="user-list">
+          {% for name, duration in users.items() %}
+            <div class="user-card">
+              <div class="profile-box on">상태박스</div>
+              <div class="user-name">{{ name }}</div>
+              <div class="user-timer">{{duration}}</div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="category-bar">
+            <button class="category-btn disabled">오늘의 기록</button>
+            <a href="{{ url_for('calender') }}" class="category-btn">이달의 기록</a>
+        </div>
+      </section><!--user-list-wrapper-->
     </div>
   </div>
   
