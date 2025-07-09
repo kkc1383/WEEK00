@@ -144,6 +144,7 @@
         color: #000;
         border: 1px solid #ddd;
         border-top: none;
+        font-size: 16px;
       }
 
       .category-btn.disabled {
