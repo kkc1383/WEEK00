@@ -265,13 +265,19 @@ def application():
            wake_trend=""
 
 
-       threeday_data=db.sleepdata.find({'sleep_end':{'$gte':threeday_group_start,'$lt':threeday_group_end}})
+       threeday_data=list(db.sleepdata.find({'sleep_end':{'$gte':threeday_group_start,'$lt':threeday_group_end}}))
 
-       group_duration=[parse_duration(r['duration'])for r in threeday_data if r.get('duration') and r['duration'] != "0"]
-       groupsleep_avg=to_hhmm(sum(group_duration)//len(group_duration))
+       sleep_datetimes = [r['sleep_start'] for r in threeday_data if r.get('sleep_start') and isinstance(r['sleep_start'], datetime)]
+
+       if sleep_datetimes:
+            avg_seconds = sum(dt.hour * 3600 + dt.minute * 60 for dt in sleep_datetimes) // len(sleep_datetimes)
+            avg_hour = avg_seconds // 3600
+            avg_min = (avg_seconds % 3600) // 60
+            groupsleep_avg = f"{avg_hour:02d}:{avg_min:02d}"
+       else:
+            groupsleep_avg = "00:00"
 
        wakeup_datetimes = [r['sleep_end'] for r in threeday_data if r.get('sleep_end') and isinstance(r['sleep_end'], datetime)]
-
        if wakeup_datetimes:
             avg_seconds = sum(dt.hour * 3600 + dt.minute * 60 for dt in wakeup_datetimes) // len(wakeup_datetimes)
             avg_hour = avg_seconds // 3600
