@@ -12,6 +12,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
+            <div class="log-out">
+          <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
+        </div>
     
     <div class="category-bar">
       <a href="{{ url_for('application') }}" class="category-btn">오늘의 기록</a>
@@ -84,9 +87,6 @@
           <span>이달 가장 높은 목표 달성자:</span>
           <span>{{ group_stats.max_goal }}</span>
         </div> 
-        <div class="log-out">
-          <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
-        </div>
       </div>
     </div>
     </div>
