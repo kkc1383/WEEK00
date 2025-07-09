@@ -36,7 +36,9 @@
           {% for day in range(1, days_in_month + 1) %}
             {% set date_key = '%d-%02d-%02d'|format(year, month, day) %}
             {% set status = sleep_status.get(date_key) %}
-            <div class="day {{ status }}">{{ day }}</div>
+            {% set is_today = date_key == now.strftime('%Y-%m-%d') %}
+
+            <div class="day {{ status }} {% if is_today %}today{% endif %}">{{ day }}</div>
           {% endfor %}
         </div>
       </div>
