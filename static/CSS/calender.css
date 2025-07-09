@@ -569,11 +569,11 @@
     }
 
     .container {
-      max-width: 1280px;
+      max-width: 640px;
       width: 100%;
       margin: 60px auto 0;
-      margin-bottom: 95px 80px;
-      padding: 0 20px;
+      margin-bottom: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
       gap: 50px;
@@ -803,30 +803,6 @@
       color: #fff;
       border-radius: 4px;
       cursor: pointer;
-    }
-
-    /* 리셋 */
-    button {
-      background: inherit;
-      border: none;
-      box-shadow: none;
-      border-radius: 0;
-      padding: 0;
-      overflow: visible;
-      cursor: pointer
-    }
-
-    a {
-      color: #fff;
-      text-decoration: none;
-      outline: none
-    }
-
-    a:hover,
-    a:active {
-      text-decoration: none;
-      color: #fff;
-      background-color: #f59000;
     }
 
     section {
