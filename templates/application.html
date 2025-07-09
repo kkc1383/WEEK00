@@ -72,15 +72,6 @@
     const userName = "{{ user_name|default('게스트') }}";
 
     function logout() {
-    $.ajax({
-    type: "POST",
-    url: "/logout", // 서버의 로그아웃 라우트
-    success: function(response) {
-      // 로그아웃 성공 시 메인(로그인) 페이지로 이동
-      window.location.href = "/";
-    },
-    error: function(xhr, status, error) {
-      alert("로그아웃 중 오류가 발생했습니다.");
       $.post("/logout", function () {
         alert('로그아웃 성공!')
         window.location.href = "/";
@@ -88,8 +79,6 @@
         alert("로그아웃 중 오류가 발생했습니다.");
       });
     }
-  });
-  }
 
     function tryRefreshAndRetry(callback){
       $.post('/refresh',{}, function (res){
