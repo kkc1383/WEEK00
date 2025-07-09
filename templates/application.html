@@ -43,11 +43,11 @@
     <a href="{{ url_for('calender') }}">캘린더 연결 링크</a>
   </div>
   <div class="user-list">
-    {% for user in users %}
+    {% for name, duration in users.items() %}
       <div class="user-card">
         <div class="profile-box"></div>
-        <div class="user-name">{{ user.name }}</div>
-        <div class="user-timer" id="timer-{{ user.id }}">00 : 00</div>
+        <div class="user-name">{{ name }}</div>
+        <div class="user-timer">{{duration}}</div>
       </div>
     {% endfor %}
   </div>
