@@ -1,12 +1,9 @@
 body {
     background: #d2d2d2;
     color: #fff;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     font-family: 'Noto Sans KR', sans-serif;
+    padding: 0;
+    margin: 0 auto;
   }
   button{
     background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer
@@ -15,6 +12,7 @@ body {
     width: 1440px;
     margin: 0 auto;
   }
+
   section {
     display: flex;
     flex-direction: column;
@@ -308,9 +306,8 @@ h1 img {
     color: rgba(19, 217, 139, 0.8);
   }
   .user-list {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;    justify-content: center;
     align-items: center;
     gap: 0.75em;
     width: 6em;
