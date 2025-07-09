@@ -294,18 +294,15 @@ a:active {
 }
 
 .day {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1; /* ✅ 정사각형 비율 유지 */
   border: 1px solid #ddd;
   text-align: center;
+  padding: 15px 0;
+  min-height: 90px;
   border-radius: 6px;
   background: #fff;
   font-size: 0.95rem;
   transition: background 0.2s, color 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  aspect-ratio: 1 / 1;
 }
 
 .day.today {
@@ -580,9 +577,11 @@ h1 img {
 
   .day {
     padding: 15px 0;
-    min-height: 90px;
+    min-height: 20px;
     border-radius: 6px;
     font-size: 0.95rem;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
   }
 
   .day.fail.today,
