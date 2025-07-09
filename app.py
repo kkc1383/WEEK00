@@ -237,23 +237,23 @@ def application():
        yesterday_data=db.sleepdata.find_one({'id':user_id,'name':user_name,'sleep_end':{'$gte':yesterday_start,'$lt':yesterday_end}})
        if yesterday_data:
            isExistYesterday=True
-           sleeptime_rough=now-yesterday_data['sleep_start'].total_seconds()
-           waketime_rough=now-yesterday_data['sleep_end'].total_seconds()
-           if sleeptime_rough < 0:
+           sleeptime_rough=(now-yesterday_data['sleep_start']).total_seconds()
+           waketime_rough=(now-yesterday_data['sleep_end']).total_seconds()
+           if sleeptime_rough < (3600*24):
                 sleep_trend="일찍"
            else:
                 sleep_trend="늦게"
-           if waketime_rough <0 :
+           if waketime_rough <(3600*24) :
                 wake_trend="일찍"
            else:
                 wake_trend="늦게"
 
-           sleeptime_gap=abs(sleeptime_rough)
+           sleeptime_gap=(3600*24)-sleeptime_rough
            sleep_hours, sleep_remainder=divmod(int(sleeptime_gap),3600) 
            sleep_minutes=sleep_remainder//60 
            sleeptime_diff=f"{sleep_hours}시간 {sleep_minutes}분"
 
-           waketime_gap=abs(waketime_rough)
+           waketime_gap=(3600*24)-waketime_rough
            wake_hours, wake_remainder=divmod(int(waketime_gap),3600) 
            wake_minutes=wake_remainder//60 
            waketime_diff=f"{wake_hours}시간 {wake_minutes}분"

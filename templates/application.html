@@ -75,13 +75,17 @@
 <div class="custom-popup" id="sleep-popup" style="display:none;">
   <div class="popup-content">
     <p class="popup-title">주무시겠어요?</p>
-    <p class="popup-diff">
-      어제보다 <span class="highlight">{{ sleeptime_diff }}</span> 더 
-      <span class="highlight">{{ sleep_trend }}</span> 주무시네요.
-    </p>
-    <p class="popup-avg">
-      최근 3일간 그룹 평균 취침시간은 <span class="highlight">{{ groupsleep_avg }}</span> 입니다.
-    </p>
+    {% if isExistYesterday %}
+      <p class="popup-diff">
+        어제보다 <span class="highlight">{{ sleeptime_diff }}</span> 더 
+        <span class="highlight">{{ sleep_trend }}</span> 주무시네요.
+      </p>
+      <p class="popup-avg">
+        최근 3일간 그룹 평균 취침시간은 <span class="highlight">{{ groupsleep_avg }}</span> 입니다.
+      </p>
+    {% else %}
+      <!--TODO -->
+    {% endif %}
     <div class="popup-btn-group">
       <button class="yes-btn" onclick="onSleepComfirm()">네</button>
       <button class="no-btn" onclick="closeSleepPopup()">아니오</button>
@@ -91,6 +95,7 @@
 <div class="custom-popup" id="wake-popup" style="display:none;">
   <div class="popup-content">
     <p class="popup-title">휴식을 종료하시겠어요?</p>
+    {% if isExistYesterday %}
     <p class="popup-diff">
       어제보다 <span class="highlight">{{ waketime_diff }}</span> 더 
       <span class="highlight">{{ wake_trend }}</span> 일어나셨네요.
@@ -98,6 +103,9 @@
     <p class="popup-avg">
       최근 3일간 그룹 평균 기상시간은 <span class="highlight">{{ groupwake_avg }}</span> 입니다.
     </p>
+    {% else %}
+      <!--TODO -->
+    {% endif %}
     <div class="popup-btn-group">
       <button class="yes-btn" onclick="onWakeComfirm()">네</button>
       <button class="no-btn" onclick="closeWakePopup()">아니오</button>
