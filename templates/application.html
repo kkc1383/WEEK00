@@ -18,7 +18,7 @@
   </style>
   <link rel="stylesheet" href="../static/CSS/application.css">
 </head>
-<body class="text-center">
+<body class="text-center" data-sleeping="{{'true' if is_sleeping else 'false'}}">
           <div class="user-bar">
                   <img src="../static/images/compassicon.jpg" alt="로고" width="30" height="30" />
                   <div class="user-name">{{ user_name }}님 환영합니다</div>
@@ -30,13 +30,15 @@
         <h1 class="logo">
           <img src="../static/images/logo.svg" alt="로고" width="300" height="300">
         </h1>
-        {% if is_sleeping %}  <!-- 수면 중일 때 -->
-          <h2>휴식을 종료할까요?</h2>
-          <h3>좋은 아침입니다! 오늘 하루도 화이팅!</h3>
-        {% else %}            <!-- 수면 중이 아닐 때 -->
-          <h2>휴식을 시작할까요?</h2>
-          <h3>오늘 하루도 고생하셨습니다!</h3>
-        {% endif %}
+          <div id="status-message">
+          {% if is_sleeping %}  <!-- 수면 중일 때 -->
+            <h2>휴식을 종료할까요?</h2>
+            <h3>좋은 아침입니다! 오늘 하루도 화이팅!</h3>
+          {% else %}            <!-- 수면 중이 아닐 때 -->
+            <h2>휴식을 시작할까요?</h2>
+            <h3>오늘 하루도 고생하셨습니다!</h3>
+          {% endif %}
+        </div>
         <div id="timer-display">00:00:00</div>
         <div class="timer-btn-group">
           <button class="timer-btn start" onclick="openObjectiveTimer()">시작</button>
@@ -139,6 +141,7 @@
     let totalStartTime = null; // totalStartTime 변수 정의
     let inputValue = null;
     let wakeup_goal=null;
+    let isSleeping=document.body.dataset.sleeping==='true';
     // 사용자 정보 변수 정의 (Django 템플릿 변수 사용)
     const userId = "{{ user_id|default('guest') }}";
     const userName = "{{ user_name|default('게스트') }}";
@@ -188,7 +191,7 @@
     }
 
     function openObjectiveTimer() {
-      if({{is_sleeping|tojson}}) return;
+      if(isSleeping) return;
       document.querySelector('.objective_time').classList.add('on');
       document.querySelector('.objective_timer').style.display = 'block';
     }
@@ -218,7 +221,7 @@
       startTimer();
     }
     function openWakePopup() {
-      if(!{{is_sleeping|tojson}}) return;
+      if(!isSleeping) return;
       document.getElementById('wake-popup').style.display = 'flex';
     }
 
@@ -229,7 +232,15 @@
       closeWakePopup();
       stopTimer();
     }
-
+    function refreshStatusMessage(){
+      $.post('/application/status_partial',{
+        user_id,userId,
+        user_name:userName
+      }, fuction(html){
+        $('#status-message').html(html);
+        isSleeping=document.body.dataset.sleeping==='true';
+      });
+    }
     function startTimer() {
       totalStartTime = new Date();
       const date = totalStartTime.getDate();
