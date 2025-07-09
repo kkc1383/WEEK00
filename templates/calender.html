@@ -25,10 +25,12 @@
         });
       }
     </script>
-        <div class="log-out">
+        <div class="user-bar">
+                  <img src="../static/images/compassicon.jpg" alt="로고" width="30" height="30" />
+                  <h1 class="user-name">백준님 환영합니다</h1>
+
           <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
         </div>
-        
     <div class="category-bar">
       <a href="{{ url_for('application') }}" class="category-btn">오늘의 기록</a>
       <button class="category-btn disabled">이달의 기록</a>
