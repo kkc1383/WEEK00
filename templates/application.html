@@ -29,7 +29,7 @@
   </div>
   <div class="objective_timer">
     <label for="targetTime">목표 기상시간</label>
-    <input type="time" id="targetTime" name="targetTime">
+      <input type="time" id="targetTime" name="targetTime">
     <button class="close-btn" onclick="closeObjectiveTimer()">확인</button>
     <button type="button" class="close-btn">디버깅버튼</button>
   </div>
@@ -127,8 +127,6 @@
       const hour = totalStartTime.getHours();
       const minute = totalStartTime.getMinutes();
       const startTime = `${hour}:${minute}`;
-      let inputValue = null;
-      let wakeup_goal_receive = null; // 목표 기상시간 저장
 
       if (timer) return; // 이미 동작 중이면 무시
       seconds = 0;
