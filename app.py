@@ -222,6 +222,20 @@ def application():
        decoded=jwt.decode(token, app.config['SECRET_KEY'],algorithms=['HS256'])
        user_id=decoded['user_id']
        user_name=decoded['user_name']
+       record=db.sleepdata.find_one({
+        'id':user_id,
+        'name':user_name,
+        'sleep_end':0
+       })
+       if record and 'sleep_start' in record: # 수면 중이면
+            is_sleeping=True
+            sleep_start=record['sleep_start']
+            now=datetime.utcnow()+timedelta(hours=9)
+            elapsed_seconds=int((now-sleep_start).total_seconds())
+       else:
+           is_sleeping=False
+           elapsed_seconds=0
+        
        users=get_sleep_users_data(user_id)
        now=datetime.utcnow()+timedelta(hours=9)
        if 0<=now.hour<= 10: # 오늘이 늦은 새벽일 경우 sleep_end와 오늘이 다른날이기 때문에 1일을 빼줌
@@ -285,11 +299,12 @@ def application():
             groupwake_avg = f"{avg_hour:02d}:{avg_min:02d}"
        else:
             groupwake_avg = "00:00"
-
        return render_template('application.html',
                               users=users,
                               user_id=user_id,
                               user_name=user_name,
+                              is_sleeping=is_sleeping,
+                              elapsed_seconds=elapsed_seconds,
                               sleeptime_diff=sleeptime_diff,
                               sleep_trend=sleep_trend,
                               waketime_diff=waketime_diff,
@@ -315,27 +330,27 @@ def get_sleep_users_data(user_id):
             sleep_status[user['name']]="00:00"
     return sleep_status
 
-@app.route('/application/status',methods=['POST'])
-def get_status():
-    user_id=request.form['user_id']
-    user_name=request.form['user_name']
+# @app.route('/application/status',methods=['POST'])
+# def get_status():
+#     user_id=request.form['user_id']
+#     user_name=request.form['user_name']
 
-    record=db.sleepdata.find_one({
-        'id':user_id,
-        'name':user_name,
-        'sleep_end':0
-    })
-    if record and 'sleep_start' in record:
-        sleep_start=record['sleep_start']
-        now=datetime.utcnow()+timedelta(hours=9)
-        elapsed_seconds=int((now-sleep_start).total_seconds())
-        return jsonify({
-            'result':'success',
-            'status':'sleeping',
-            'elapsed_seconds':elapsed_seconds,
-        })
-    else:
-        return jsonify({'result':"failure"})
+#     record=db.sleepdata.find_one({
+#         'id':user_id,
+#         'name':user_name,
+#         'sleep_end':0
+#     })
+#     if record and 'sleep_start' in record:
+#         sleep_start=record['sleep_start']
+#         now=datetime.utcnow()+timedelta(hours=9)
+#         elapsed_seconds=int((now-sleep_start).total_seconds())
+#         return jsonify({
+#             'result':'success',
+#             'status':'sleeping',
+#             'elapsed_seconds':elapsed_seconds,
+#         })
+#     else:
+#         return jsonify({'result':"failure"})
 
 @app.route('/application/refresh',methods=['POST'])
 def refresh_data():
