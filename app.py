@@ -339,7 +339,8 @@ def get_status():
 
 @app.route('/application/refresh',methods=['POST'])
 def refresh_data():
-    sleep_users_data=get_sleep_users_data()
+    user_id=request.form['user_id']
+    sleep_users_data=get_sleep_users_data(user_id)
     return jsonify({'result':'success','users':sleep_users_data})
 
 @app.route('/application/start', methods=['POST'])
