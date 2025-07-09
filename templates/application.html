@@ -74,7 +74,7 @@
         data:{'user_id':userId,'user_name':userName},
         success:function(res){
           if(res.status==='sleeping'){
-            alert('현재 수면 중이시군요')
+            //alert('현재 수면 중이시군요')
             seconds=res.elapsed_seconds;
             updateTimerDisplay();
             //TODO ~~님은 현재 수면 중입니다.
@@ -84,7 +84,7 @@
             },1000);
           }
           else{
-            alert('현재 수면 중이 아님')
+            console.log('현재 수면 중이 아님')
           }
         }
       })
