@@ -12,15 +12,13 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
+    <div class="page-title">
+      <a href="{{ url_for('calender', year=prev_year, month=prev_month) }}">◀</a>
+      <h1>{{ year }}년 {{ month }}월</h1>
+      <a href="{{ url_for('calender', year=next_year, month=next_month) }}">▶</a>
+    </div>
     <div class="container">
       <div class="calendar-wrapper">
-        <h1>
-          <!-- ✅ a href로 연/월 이동 -->
-          <a href="{{ url_for('calender', year=prev_year, month=prev_month) }}">◀</a>
-          <span>{{ year }}년 {{ month }}월</span>
-          <a href="{{ url_for('calender', year=next_year, month=next_month) }}">▶</a>
-        </h1>
-
         <div class="calendar">
           <!-- 요일 헤더 -->
           {% for d in ['일', '월', '화', '수', '목', '금', '토'] %}
@@ -36,7 +34,9 @@
           {% for day in range(1, days_in_month + 1) %}
             {% set date_key = '%d-%02d-%02d'|format(year, month, day) %}
             {% set status = sleep_status.get(date_key) %}
-            <div class="day {{ status }}">{{ day }}</div>
+            {% set is_today = date_key == now.strftime('%Y-%m-%d') %}
+
+            <div class="day {{ status }} {% if is_today %}today{% endif %}">{{ day }}</div>
           {% endfor %}
         </div>
       </div>

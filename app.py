@@ -37,13 +37,19 @@ app.json = CustomJSONProvider(app)
 
 def get_duration(start,end):
 
-    if end<=start:
-        end+=timedelta(days=1)
-
-    duration= end-start
+    duration=end-start
     total_seconds=duration.total_seconds()
-    hours, remainder=divmod(int(total_seconds),3600)
-    minutes=remainder//60
+    print(duration)
+    print(end)
+    print(start)
+    print(total_seconds)
+    ''' 
+        디버깅에 용이함을 위해 시:분이 저장되어야 할 것을 한 단계 낮추어
+        분:초가 저장되게끔 바꾸었음
+        나중에 실제로 서비스 할때는 60->3600으로 바꾸면 시: 분이 duration에 저장됨
+    '''
+    hours, remainder=divmod(int(total_seconds),60) 
+    minutes=remainder  # 실제로 서비스 할때는 60으로 나눈 몫이 필요함 //60
 
     return f"{hours:02d}:{minutes:02d}"
 
@@ -67,6 +73,11 @@ def regist_account():
    gender_receive=request.form['gender_give']
    email_receive=request.form['email_give']
    birth_receive=request.form['birth_give']
+   
+   # ✅ 비밀번호 길이 검사
+   if not (8 <= len(pw_receive) < 15):
+        return jsonify({'result': 'fail', 'msg': '비밀번호 길이가 조건에 맞지 않습니다.'})
+
    account={'id':id_receive, 'pw':pw_receive, 'name':name_receive, 'gender':gender_receive, 'email':email_receive, 'birth':birth_receive}
    
    db.accounts.insert_one(account)
@@ -184,6 +195,34 @@ def application():
    except jwt.InvalidTokenError:
        return "유효하지 않은 토큰입니다."
 
+@app.route('/application/status',methods=['POST'])
+def get_status():
+    user_id=request.form['user_id']
+    user_name=request.form['user_name']
+
+    record=db.sleepdata.find_one({
+        'id':user_id,
+        'name':user_name,
+        'sleep_end':0
+    })
+    if record and 'sleep_start' in record:
+        sleep_start=record['sleep_start']
+        now=datetime.utcnow()+timedelta(hours=9)
+
+        elapsed_seconds=int((now-sleep_start).total_seconds())
+        return jsonify({
+            'result':'success',
+            'status':'sleeping',
+            'elapsed_seconds':elapsed_seconds,
+        })
+    elif record:
+        return jsonify({
+            'result':'success',
+            'status':'not_sleeping'
+            })
+    else:
+        return jsonify({'result':"failure"})
+
 @app.route('/application/start', methods=['POST'])
 def start_sleep():
     id_receive=request.form['id_give']
@@ -194,7 +233,7 @@ def start_sleep():
         sleepData={
             'id':id_receive,
             'name':name_receive,
-            'sleep_start':datetime.utcnow(),
+            'sleep_start':datetime.utcnow()+timedelta(hours=9),
             'sleep_end':0,
             'wakeup_goal':wakeup_goal_receive,
             'duration':0,
@@ -210,8 +249,10 @@ def end_sleep():
     id_receive=request.form['id_give']
     name_receive=request.form['name_give']
     user=db.sleepdata.find_one({'id':id_receive,'name':name_receive,'sleep_end':0})
-    sleep_end=datetime.utcnow()
-    duration=get_duration(sleep_end,user['sleep_start'])
+    if not user:
+        return jsonify({'result':'failure'})
+    sleep_end=datetime.utcnow()+timedelta(hours=9)
+    duration=get_duration(user['sleep_start'],sleep_end)
     
     h,m=map(int,user['wakeup_goal'].split(":"))
     goal=sleep_end.replace(hour=h, minute=m, second=0, microsecond=0)
@@ -235,7 +276,7 @@ def calender():
         
 
         # 여기서부터 이번 달 수면 데이터 처리
-        now=datetime.utcnow()
+        now=datetime.utcnow()+timedelta(hours=9)
         year=request.args.get('year',default=now.year, type=int)
         month=request.args.get('month',default=now.month, type=int)
 
@@ -258,22 +299,47 @@ def calender():
         first_weekday, days_in_month=monthrange(year,month)
         end_date=datetime(year,month, days_in_month,23,59,59)
 
-        my_records=list(db.sleepdata.find({
-            'id':user_id, 'name':user_name,
-            'sleep_start':{'$gte':start_date,'$lte':end_date, }
-        }))
+        # 총 그룹 불러오기
+        all_records_rough=list(db.sleepdata.find({}))
+
+        all_records=[]
+        my_records=[]
+        for record in all_records_rough:
+            sleep_start=record.get('sleep_start')
+            if not sleep_start:
+                continue
+
+            if 0<=sleep_start.hour<10:
+                compare_date=(sleep_start-timedelta(days=1))
+            else:
+                compare_date=sleep_start
+            
+            if start_date<=compare_date<=end_date:
+                all_records.append(record)
+
+                # 그 중에 내 기록 추출하기
+                if record.get('id')==user_id and record.get('name')==user_name:
+                    my_records.append(record)
 
         def parse_duration(s):
             h,m=map(int,s.split(":"))
             return h*60+m
         
+        # 이번달 내 데이터 처리 관련
         my_durations=[parse_duration(r['duration'])for r in my_records if r.get('duration') and r['duration'] != "0"]
         achieved_count=sum(1 for r in my_records if r.get('isAchieved'))
 
         sleep_status = {}
         for record in my_records:
-            day = record['sleep_start'].day
-            key = f"{year}-{month:02d}-{day:02d}"
+            sleep_start=record.get("sleep_start")
+            if not sleep_start:
+                continue
+            if 0<=sleep_start.hour<10:
+                adjusted_date=(sleep_start-timedelta(days=1)).date()
+            else:
+                adjusted_date=sleep_start.date()
+            key=adjusted_date.strftime('%Y-%m-%d')
+
             if 'isAchieved' in record:
                 if record['isAchieved'] == True:
                     sleep_status[key] = 'success'
@@ -300,15 +366,8 @@ def calender():
                 'max_sleep':"00:00",
                 'min_sleep':"00:00",
             }
-        # 총 그룹 불러오기
-        all_records=list(db.sleepdata.find({
-            'sleep_start': {'$gte':start_date, '$lte':end_date}
-        }))
-
-        def parse_duration(dur):  # 그룹 평균 수면 시간
-            h, m = map(int, dur.split(":"))
-            return h * 60 + m
-
+        
+        # 이번달 그룹 내 데이터 처리 관련
         valid_durations = [parse_duration(r['duration']) for r in all_records if r.get('duration') and r['duration'] != "0"]
 
         if valid_durations:
@@ -382,7 +441,8 @@ def calender():
                            days_in_month=days_in_month,
                            sleep_status=sleep_status,
                            my_stats=my_stats,
-                           group_stats=group_stats)
+                           group_stats=group_stats,
+                           now=now)
     except jwt.ExpiredSignatureError:
         return "토큰이 만료되었습니다. 다시 로그인해주세요."
     except jwt.InvalidTokenError:

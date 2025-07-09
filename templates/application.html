@@ -66,7 +66,32 @@
         }
       });
     }
-
+    window.onload=function(){
+      $.ajax({
+        type:'POST',
+        url:'/application/status',
+        data:{'user_id':userId,'user_name':userName},
+        success:function(res){
+          if(res.status==='sleeping'){
+            alert('현재 수면 중이시군요')
+            seconds=res.elapsed_seconds;
+            updateTimerDisplay();
+            //TODO ~~님은 현재 수면 중입니다.
+            timer=setInterval(() => {
+              seconds++;
+              updateTimerDisplay();
+            },1000);
+          }
+          else if(res.status==='not_sleeping'){
+            alert('현재 수면중이 아니군요')
+            //TODO 현재 수면 중이 아님
+          }
+          else{
+            alert('타이머 상태 확인 실패')
+          }
+        }
+      })
+    }
     function formatTime(totalSeconds) {
       const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
       const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');

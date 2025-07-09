@@ -68,6 +68,12 @@
       let day = $('#form-birth-day').val();
       let birth = `${year}-${month}-${day}`;
 
+
+      if (pw.length < 8 || pw.length >= 15) {
+      alert("비밀번호는 8자 이상 15자 미만으로 입력해야 합니다.");
+      return;
+      }
+
       $.ajax({
         type: "POST",
         url: "/register/post",
