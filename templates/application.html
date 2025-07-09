@@ -83,12 +83,8 @@
               updateTimerDisplay();
             },1000);
           }
-          else if(res.status==='not_sleeping'){
-            alert('현재 수면중이 아니군요')
-            //TODO 현재 수면 중이 아님
-          }
           else{
-            alert('타이머 상태 확인 실패')
+            alert('현재 수면 중이 아님')
           }
         }
       })
@@ -210,10 +206,6 @@
           } else {
             alert('실패!');
           }
-        },
-        error: function(xhr, status, error) {
-          console.error('AJAX 오류:', error);
-          alert('요청 중 오류가 발생했습니다.');
         }
       });
     }
