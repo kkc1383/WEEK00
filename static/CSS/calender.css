@@ -146,6 +146,22 @@
         border-top: none;
       }
 
+      .category-btn.disabled {
+        background: #1d1d1d;
+        /* 강조 배경색 */
+        color: #fff;
+        /* 글자 흰색 */
+        cursor: default;
+        /* 마우스 모양 변경 */
+        pointer-events: none;
+        /* 클릭 불가 */
+      }
+
       .category-btn:hover {
-        background: #f5f5f5;
+        background: #eee;
+      }
+
+      .category-btn.disabled:hover {
+        background: #1d1d1d;
+        /* hover에도 색 고정 */
       }

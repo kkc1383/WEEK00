@@ -78,15 +78,12 @@
           <span>이번달 가장 높은 목표 달성자:</span>
           <span>{{ group_stats.max_goal }}</span>
         </div>
-        <div class="calender">
-          <a href="{{ url_for('application') }}">타이머 연결 링크</a>
-        </div>
       </div>
     </div>
 
     <div class="category-bar">
       <a href="{{ url_for('application') }}" class="category-btn">내 기록</a>
-      <a>이달의 기록</a>
+      <button class="category-btn disabled">이달의 기록</a>
     </div>
   </body>
 </html>
