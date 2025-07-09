@@ -152,9 +152,14 @@
       .stats-box .stat-row-wrapper {
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 10px;
+        color: #555;
       }
 
+      .stats-box .stat-row-wrapper .point {
+        font-weight: 700;
+        color: #1d1d1d;
+      }
       .stats-box h3 {
         margin-top: 0;
         font-size: 1.2rem;
