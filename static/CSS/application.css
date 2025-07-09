@@ -349,7 +349,7 @@ h1 img {
     left: 0;
     width: 80%;                /* 정사각형 비율 유지 */
     aspect-ratio: 1 / 1;       /* 가로세로 비율을 1:1로 맞춤 */
-    background-color: #05D182;
+    background: url(../images/user_wakeup_status.png) no-repeat center center / cover;
     border-radius: 12px;       /* 꼭짓점 둥글게 */
     margin: 0 auto;            /* 가운데 정렬 */
     transform: translateX(10%); /* 가운데 미세 조정 */
@@ -362,7 +362,8 @@ h1 img {
   width: 100%;
   height: 40%;
   border-radius: 0.75em !important;
-  background-color: #FF3333;
+  background: url(../images/user_sleep_status.png) no-repeat center center / cover;
+  
 }
 .user-card  .user-timer {
   color: #1d1d1d;
