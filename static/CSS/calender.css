@@ -20,9 +20,15 @@
         /* 카테고리바보다 위로 올리고 싶으면 */
       }
 
-      .user-name {
-        margin: 0;
-        font-size: 17pt;
+      .user-bar .user-name {
+        flex: 1;
+        /* 핵심! */
+        text-align: center;
+        /* 가운데 정렬 */
+        font-size: 18px;
+        font-weight: bold;
+        white-space: nowrap;
+        /* 줄바꿈 방지 */
       }
 
       .btn-logout {
@@ -35,11 +41,16 @@
       }
 
       .container {
-        max-width: 1200px;
+        max-width: 1280px;
         width: 100%;
         margin: 60px auto 0;
-        margin-bottom: 80px;
+        margin-bottom: 95px 80px;
         padding: 0 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+        justify-content: center;
+        align-items: center;
       }
 
       .calendar-wrapper {
@@ -62,9 +73,8 @@
         align-items: center;
         gap: 20px;
         margin-bottom: 30px;
+        width: 100%;
       }
-
-
 
       .page-title h1 {
         margin: 0;
@@ -74,6 +84,7 @@
         display: flex;
         gap: 80px;
         align-items: stretch;
+        width: 100%;
       }
 
       .calendar {
@@ -133,8 +144,22 @@
         border-radius: 12px;
         padding: 20px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
       }
 
+      .stats-box .stat-row-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        color: #555;
+      }
+
+      .stats-box .stat-row-wrapper .point {
+        font-weight: 700;
+        color: #1d1d1d;
+      }
       .stats-box h3 {
         margin-top: 0;
         font-size: 1.2rem;

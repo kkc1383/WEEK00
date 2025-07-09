@@ -25,86 +25,94 @@
         });
       }
     </script>
-        <div class="user-bar">
-                  <img src="../static/images/compassicon.jpg" alt="로고" width="30" height="30" />
-                  <h1 class="user-name">{{ user_name }}님 환영합니다</h1>
-
-          <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
-        </div>
-    <div class="category-bar">
-      <a href="{{ url_for('application') }}" class="category-btn">오늘의 기록</a>
-      <button class="category-btn disabled">이달의 기록</a>
+    <div class="user-bar">
+      <img src="../static/images/compassicon.jpg" alt="로고" width="30" height="30" />
+      <h1 class="user-name">{{ user_name }}님 환영합니다</h1>
+      <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
     </div>
-    <div class="container">
-      <div class="page-title">
-        <a href="{{ url_for('calender', year=prev_year, month=prev_month) }}">◀</a>
-        <h1>{{ year }}년 {{ month }}월</h1>
-        <a href="{{ url_for('calender', year=next_year, month=next_month) }}">▶</a>
-      </div>
-      <div class="content-row">
-      <div class="calendar-wrapper">
-        <div class="calendar">
-          <!-- 요일 헤더 -->
-          {% for d in ['월', '화', '수', '목', '금', '토', '일'] %}
-            <div class="day header">{{ d }}</div>
-          {% endfor %}
-
-          <!-- 첫째 주 빈칸 -->
-          {% for _ in range(first_weekday) %}
-            <div class="day"></div>
-          {% endfor %}
-
-          <!-- 날짜 셀 -->
-          {% for day in range(1, days_in_month + 1) %}
-            {% set date_key = '%d-%02d-%02d'|format(year, month, day) %}
-            {% set status = sleep_status.get(date_key) %}
-            {% set is_today = date_key == now.strftime('%Y-%m-%d') %}
-
-            <div class="day {{ status }} {% if is_today %}today{% endif %}">{{ day }}</div>
-          {% endfor %}
+    <div id="wrap">
+      <div class="wrapper">
+        <div class="category-bar">
+          <a href="{{ url_for('application') }}" class="category-btn">오늘의 기록</a>
+          <button class="category-btn disabled">이달의 기록</a>
         </div>
-      </div>
-
-      <!-- 오른쪽 통계 -->
-      <div class="stats-box">
-        <h3>나의 통계</h3>
-        <div class="stat-row">
-          <span>{{month}}월 평균 수면시간:</span>
-          <span>{{ my_stats.avg_sleep }}</span>
-        </div>
-        <div class="stat-row">
-          <span>{{month}}월 목표달성 횟수:</span>
-          <span>{{ my_stats.goal_count }}</span>
-        </div>
-        <div class="stat-row">
-          <span>{{month}}월 가장 많이 잔 시간:</span>
-          <span>{{ my_stats.max_sleep }}</span>
-        </div>
-        <div class="stat-row">
-          <span>{{month}}월 가장 적게 잔 시간:</span>
-          <span>{{ my_stats.min_sleep }}</span>
-        </div><br />
-
-        <h3>그룹 통계</h3>
-        <div class="stat-row">
-          <span>{{month}}월 평균 수면시간:</span>
-          <span>{{ group_stats.avg_sleep }}</span>
-        </div>
-        <div class="stat-row">
-          <span>{{month}}월 평균 기상시간:</span>
-          <span>{{ group_stats.avg_wake }}</span>
-        </div>
-        <div class="stat-row">
-          <span>{{month}}월 가장 많이 잔 사람:</span>
-          <span>{{ group_stats.max_sleeper }}</span>
-        </div>
-        <div class="stat-row">
-          <span>{{month}}월 가장 높은 목표 달성자:</span>
-          <span>{{ group_stats.max_goal }}</span>
-        </div> 
+        <div class="container">
+          <div class="page-title">
+            <a href="{{ url_for('calender', year=prev_year, month=prev_month) }}">◀</a>
+            <h1>{{ year }}년 {{ month }}월</h1>
+            <a href="{{ url_for('calender', year=next_year, month=next_month) }}">▶</a>
+          </div>
+          <div class="content-row">
+          <div class="calendar-wrapper">
+            <div class="calendar">
+              <!-- 요일 헤더 -->
+              {% for d in ['월', '화', '수', '목', '금', '토', '일'] %}
+                <div class="day header">{{ d }}</div>
+              {% endfor %}
+    
+              <!-- 첫째 주 빈칸 -->
+              {% for _ in range(first_weekday) %}
+                <div class="day"></div>
+              {% endfor %}
+    
+              <!-- 날짜 셀 -->
+              {% for day in range(1, days_in_month + 1) %}
+                {% set date_key = '%d-%02d-%02d'|format(year, month, day) %}
+                {% set status = sleep_status.get(date_key) %}
+                {% set is_today = date_key == now.strftime('%Y-%m-%d') %}
+    
+                <div class="day {{ status }} {% if is_today %}today{% endif %}">{{ day }}</div>
+              {% endfor %}
+            </div>
+          </div>
+    
+          <!-- 오른쪽 통계 -->
+          <div class="stats-box">
+            <h3>나의 통계</h3>
+            <div class="stat-row-wrapper">
+              <div class="stat-row">
+                <span>{{month}}월 평균 수면시간:</span>
+                <span>{{ my_stats.avg_sleep }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 목표달성 횟수:</span>
+                <span>{{ my_stats.goal_count }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 가장 많이 잔 시간:</span>
+                <span>{{ my_stats.max_sleep }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 가장 적게 잔 시간:</span>
+                <span>{{ my_stats.min_sleep }}</span>
+              </div><br />
+            </div>
+              
+    
+            <h3>그룹 통계</h3>
+            <div class="stat-row-wrapper">
+              <div class="stat-row">
+                <span>{{month}}월 평균 수면시간:</span>
+                <span>{{ group_stats.avg_sleep }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 평균 기상시간:</span>
+                <span>{{ group_stats.avg_wake }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 가장 많이 잔 사람:</span>
+                <span>{{ group_stats.max_sleeper }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 가장 높은 목표 달성자:</span>
+                <span>{{ group_stats.max_goal }}</span>
+              </div> 
+            </div>
+              
+          </div>
+          </div>
+        </div><!--container-->
       </div>
     </div>
-    </div>
-
   </body>
 </html>

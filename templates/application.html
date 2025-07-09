@@ -19,16 +19,19 @@
   <link rel="stylesheet" href="../static/CSS/application.css">
 </head>
 <body class="text-center">
+          <div class="user-bar">
+                  <img src="../static/images/compassicon.jpg" alt="로고" width="30" height="30" />
+                  <div class="user-name">{{ user_name }}님 환영합니다</div>
+          <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
+        </div>
   <div id="wrap">
     <div class="wrapper">
       <section class="timer-wrapper">
         <h1 class="logo">
-          <img src="../static/images/logo.svg" alt="logo">
+          <img src="../static/images/logo.svg" alt="로고" width="300" height="300">
         </h1>
-        <h2 class="user-name">{{ user_name }}님 환영합니다</h2>
-        <div class="log-out">
-          <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
-        </div>
+        <h2>휴식을 시작할까요?</h2>
+
         <a href="/application/calculate">
           <button type="button">계산하기</button>
         </a>
