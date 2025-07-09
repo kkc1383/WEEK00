@@ -102,13 +102,19 @@
     <p class="popup-title">휴식을 종료하시겠어요?</p>
     {% if isExistYesterday %}
     <p class="popup-diff">
-      어제는 기록하지 않으셨네요!
+      어제보다 <span class="highlight">{{ waketime_diff }}</span> 더 
+      <span class="highlight">{{ wake_trend }}</span> 일어나셨네요.
     </p>
     <p class="popup-avg">
       최근 3일간 그룹 평균 기상시간은 <span class="highlight">{{ groupwake_avg }}</span> 입니다.
     </p>
     {% else %}
-      <!--TODO -->
+            <p class="popup-diff">
+        어제는 기록하지 않으셨네요!
+      </p>
+      <p class="popup-avg">
+        최근 3일간 그룹 평균 기상시간은 <span class="highlight">{{ groupwake_avg }}</span> 입니다.
+      </p>
     {% endif %}
     <div class="popup-btn-group">
       <button class="yes-btn" onclick="onWakeComfirm()">네</button>
