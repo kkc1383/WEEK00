@@ -21,7 +21,7 @@
 
       .page-title a {
         text-decoration: none;
-        color: rgb(148, 148, 148);
+        color: #949494;
         font-weight: bold;
       }
 
@@ -147,10 +147,10 @@
       }
 
       .category-btn.disabled {
-        background: #1d1d1d;
+        background: #949494;
         /* 강조 배경색 */
-        color: #fff;
-        /* 글자 흰색 */
+        color: #000000;
+        /* 글자 검정 */
         cursor: default;
         /* 마우스 모양 변경 */
         pointer-events: none;
@@ -162,6 +162,6 @@
       }
 
       .category-btn.disabled:hover {
-        background: #1d1d1d;
+        background: #949494;
         /* hover에도 색 고정 */
       }
