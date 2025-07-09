@@ -576,9 +576,11 @@ h1 img {
 
   .day {
     padding: 15px 0;
-    min-height: 90px;
+    min-height: 20px;
     border-radius: 6px;
     font-size: 0.95rem;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
   }
 
   .day.fail.today,
