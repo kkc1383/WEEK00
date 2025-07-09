@@ -337,6 +337,11 @@ def get_status():
     else:
         return jsonify({'result':"failure"})
 
+@app.route('/application/refresh',methods=['POST'])
+def refresh_data():
+    sleep_users_data=get_sleep_users_data()
+    return jsonify({'result':'success','users':sleep_users_data})
+
 @app.route('/application/start', methods=['POST'])
 def start_sleep():
     id_receive=request.form['id_give']
