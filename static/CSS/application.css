@@ -119,3 +119,49 @@ body {
   .objective_time:hover {
     color: rgba(19, 217, 139, 0.8);
   }
+        .category-bar {
+        position: fixed;
+        bottom: 0;
+        /* 화면 맨 아래 고정 */
+        left: 0;
+        width: 100%;
+        /* 가로 100% */
+        display: flex;
+        border-top: 1px solid #ddd;
+        background: #fff;
+        z-index: 999;
+        /* 다른 요소보다 위에 */
+      }
+
+      .category-btn {
+        flex: 1;
+        text-align: center;
+        text-decoration: none;
+        padding: 15px 0;
+        background: #ffffff;
+        font-weight: bold;
+        color: #000;
+        border: 1px solid #ddd;
+        border-top: none;
+        font-size: 16px;
+      }
+
+      .category-btn.disabled {
+        background: #d2d2d2;
+        /* 강조 배경색 */
+        color: #000000;
+        /* 글자 검정 */
+        cursor: default;
+        /* 마우스 모양 변경 */
+        pointer-events: none;
+        /* 클릭 불가 */
+      }
+
+      .category-btn:hover {
+        background: #eee;
+      }
+
+      .category-btn.disabled:hover {
+        background: #d2d2d2;
+        /* hover에도 색 고정 */
+      }
