@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="../static/CSS/application.css">
 </head>
 <body class="text-center">
-  <div id="timer-display">00:00</div>
+  <div id="timer-display">00:00:00</div>
   <div class="timer-btn-group">
     <button class="timer-btn start" onclick="openObjectiveTimer()">시작</button>
     <button class="timer-btn stop" onclick="stopTimer()">종료</button>
@@ -97,7 +97,6 @@
     }
 
     function startTimer() {
-      /*
       totalStartTime = new Date();
       const date = totalStartTime.getDate();
       const month = totalStartTime.getMonth() + 1;
@@ -108,24 +107,6 @@
       const startTime = `${hour}:${minute}`;
       let inputValue = null;
       let wakeup_goal_receive = null; // 목표 기상시간 저장
-      */
-      totalStartTime = new Date(); // 시작시간 데이터
-
-      let date = totalStartTime.getDate();
-      let month = totalStartTime.getMonth() + 1;
-      let year = totalStartTime.getFullYear();
-      let day = year + '-' + month + '-' + date; // 시작 날짜
-      let hour = totalStartTime.getHours();
-      let minute = totalStartTime.getMinutes();
-      let startTime = hour + ':' + minute; // 시작 시간 (시:분)
-
-
-      console.log(startTime); // 콘솔창에 시작시간 출력
-      console.log(day); // 콘솔창에 시작날짜 출력
-      console.log('사용자 ID:', userId); // 콘솔창에 사용자아이디 출력
-      console.log('사용자 이름:', userName); // 콘솔창에 사용자이름 출력
-      console.log('목표 기상시간:', wakeup_goal_receive); // 콘솔창에 목표 기상시간 출력
-      console.log('설정된 목표 기상시간:', wakeup_goal_receive);
 
       if (timer) return; // 이미 동작 중이면 무시
       seconds = 0;
@@ -145,7 +126,6 @@
         success: function (response) {
           if (response['result'] === 'success') {
             alert('성공');
-            con
           } else {
             alert('이미 수면이 시작되었습니다!');
           }
