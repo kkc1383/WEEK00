@@ -4,51 +4,69 @@
   <meta charset="UTF-8">
   <title>타이머</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <style>
+    #timer-display {
+      font-size: 80px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .btn-timer {
+      font-size: 20px;
+      width: 120px;
+      margin: 10px;
+    }
+  </style>
   <link rel="stylesheet" href="../static/CSS/application.css">
 </head>
 <body class="text-center">
-  <!-- 타이머 표시 -->
   <div id="timer-display">00:00:00</div>
-  <!-- 타이머 버튼 그룹 -->
   <div class="timer-btn-group">
-    <button class="timer-btn start" onclick="startTimer()">시작</button>
+    <button class="timer-btn start" onclick="openObjectiveTimer()">시작</button>
     <button class="timer-btn stop" onclick="stopTimer()">종료</button>
   </div>
-  <!-- 목표 기상시간 설정 -->
-  <div class="timer-label objective_time" onclick="openObjectiveTimer()">
-    목표 기상시간 설정 <span class="arrow">&#9660;</span>
+  <div class="timer-label objective_time">
+  <!--  목표 기상시간 설정 <span class="arrow">&#9660;</span> -->
   </div>
-  <!-- 목표 기상시간 입력 팝업 -->
   <div class="objective_timer">
     <label for="targetTime">목표 기상시간</label>
     <input type="time" id="targetTime" name="targetTime">
-    <button class="close-btn" onclick="closeObjectiveTimer()">닫기</button>
+    <button class="close-btn" onclick="closeObjectiveTimer()">확인</button>
   </div>
-  <!--사용자 목록-->
-  <div class="user-list">
-    {% for user in users %}
-      <div class="user-card">
-        <div class="profile-box"></div>
-        <div class="user-name">{{ user.name }}</div>
-        <div class="user-timer" id="timer-{{ user.id }}">00 : 00</div>
-      </div>
-    {% endfor %}
+  <div class="calender">
+    <a href="{{ url_for('calender') }}">캘린더 연결 링크</a>
   </div>
+  
+  <!--
+   초 단위로 변환해야됨
+   시작을 누르면 디비로 id 이름 날짜 수면시작시간 저장
+   종료를 누르면 디비로 수면종료시간 총 수면시간 저장
+  -->
 
   <!-- jQuery 로드 -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    // ===================== 전역 변수 =====================
     let seconds = 0;
     let timer = null;
-    let totalStartTime = null;
-    let wakeup_goal_receive = null; // 목표 기상시간 저장
+    let startTime = null;
+    let totalStartTime = null; // totalStartTime 변수 정의
+    let inputValue = null;
 
-    // Django 템플릿에서 사용자 정보 전달
+    // 사용자 정보 변수 정의 (Django 템플릿 변수 사용)
     const userId = "{{ user_id|default('guest') }}";
     const userName = "{{ user_name|default('게스트') }}";
 
-    // ===================== 타이머 표시 함수 =====================
+    function tryRefreshAndRetry(callback){
+      $.post('/refresh',{}, function (res){
+        if (res.result==='success'){
+          localStorage.setItem('access_token',res.access_token);
+          callback();
+        }else{
+          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+          window.location.href='/';
+        }
+      });
+    }
+
     function formatTime(totalSeconds) {
       const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
       const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
@@ -57,10 +75,27 @@
     }
 
     function updateTimerDisplay() {
-      document.getElementById('timer-display').innerText = formatTime(seconds);
+      const totalSeconds = seconds;
+      document.getElementById('timer-display').innerText = formatTime(totalSeconds);
     }
 
-    // ===================== 타이머 시작 =====================
+    function openObjectiveTimer() {
+      document.querySelector('.objective_time').classList.add('on');
+      document.querySelector('.objective_timer').style.display = 'block';
+    }
+
+    function closeObjectiveTimer() {
+      // 목표 기상시간 설정 후 확인 버튼 누르면 목표 기상시간 저장
+      inputValue = document.getElementById('targetTime').value;
+      wakeup_goal_receive = inputValue;
+      
+      //확인버튼 누르면 팝업창 닫기
+      document.querySelector('.objective_time').classList.remove('on');
+      document.querySelector('.objective_timer').style.display = 'none';
+      alert('목표 수면 시간 설정 완료! 수면을 시작합니다!');
+      startTimer();
+    }
+
     function startTimer() {
       totalStartTime = new Date();
       const date = totalStartTime.getDate();
@@ -75,14 +110,12 @@
 
       if (timer) return; // 이미 동작 중이면 무시
       seconds = 0;
-      updateTimerDisplay();
       timer = setInterval(() => {
         seconds++;
         updateTimerDisplay();
       }, 1000);
 
-      // 시작 정보 서버로 전송
-      $.ajax({
+      $.ajax({ // 시작버튼을 누르면 사용자아이디 및 사용자이름과 시작시간과 날짜를 디비에 저장
         type: "POST",
         url: "/application/start",
         data: {
@@ -94,7 +127,7 @@
           if (response['result'] === 'success') {
             alert('성공');
           } else {
-            alert('실패!');
+            alert('이미 수면이 시작되었습니다!');
           }
         },
         error: function(xhr, status, error) {
@@ -104,23 +137,46 @@
       });
     }
 
-    // ===================== 타이머 종료 =====================
     function stopTimer() {
       if (!timer) return;
       clearInterval(timer);
       timer = null;
 
-      const totalEndTime = new Date();
-      const endTime = `${totalEndTime.getHours()}:${totalEndTime.getMinutes()}`;
-      const totalSeconds = seconds;
+      const totalEndTime = new Date(); // 종료시간 데이터
 
-      // 종료 정보 서버로 전송
-      $.ajax({
+      let endTime = totalEndTime.getHours() + ':' + totalEndTime.getMinutes();
+      console.log(endTime); // 종료시간(시:분)
+
+      const totalSeconds = seconds;
+      const minutes = Math.floor(totalSeconds / 60);
+      const remainingSeconds = totalSeconds % 60;
+      const totalTakeTime = totalEndTime - totalStartTime; // 총 소요시간(밀리초)
+
+
+      function convertMillisecondsToTime(milliseconds) {
+        // 밀리초를 초로 변환
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        
+        // 시와 분 계산
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        
+        // 2자리로 포맷팅
+        const formattedHours = String(hours).padStart(2, '0');
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        
+        return `${formattedHours}:${formattedMinutes}`;
+      }
+
+      const timeInHoursMinutes = convertMillisecondsToTime(totalTakeTime);
+      console.log(timeInHoursMinutes); // post 보내야하는 총 소요시간(시:분)
+
+      $.ajax({ // 종료버튼을 누르면 종료시간과 총 소요시간을 디비에 저장
         type: "POST",
         url: "/application/end",
         data: {
-          id_give: userId,
-          name_give: userName,
+          'id_give': userId,
+          'name_give': userName,
         },
         success: function (response) {
           if (response['result'] === 'success') {
@@ -136,19 +192,13 @@
       });
     }
 
-    // ===================== 목표 기상시간 팝업 열기/닫기 =====================
-    function openObjectiveTimer() {
-      document.querySelector('.objective_time').classList.add('on');
-      document.querySelector('.objective_timer').style.display = 'flex';
+    function resetTimer() {
+      clearInterval(timer);
+      seconds = 0;
+      console.log(formatTime(seconds)); // 00:00:00
     }
-    function closeObjectiveTimer() {
-      // input 값 저장
-      const inputValue = document.getElementById('targetTime').value;
-      wakeup_goal_receive = inputValue;
-      console.log('설정된 목표 기상시간:', wakeup_goal_receive);
-      document.querySelector('.objective_time').classList.remove('on');
-      document.querySelector('.objective_timer').style.display = 'none';
-    }
-  </script> 
+
+
+  </script>
 </body>
 </html>
