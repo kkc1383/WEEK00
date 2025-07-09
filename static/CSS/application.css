@@ -280,7 +280,8 @@ h1 img {
     color: rgba(19, 217, 139, 0.8);
   }
   .user-list {
-    display: flex;
+    display: flex !important;
+    flex-wrap: wrap !important;
     justify-content: center;
     align-items: center;
     gap: 0.75em;
