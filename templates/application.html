@@ -19,16 +19,19 @@
   <link rel="stylesheet" href="../static/CSS/application.css">
 </head>
 <body class="text-center">
+          <div class="user-bar">
+                  <img src="../static/images/compassicon.jpg" alt="로고" width="30" height="30" />
+                  <div class="user-name">{{ user_name }}님 환영합니다</div>
+          <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
+        </div>
   <div id="wrap">
     <div class="wrapper">
       <section class="timer-wrapper">
         <h1 class="logo">
-          <img src="../static/images/logo.svg" alt="logo">
+          <img src="../static/images/logo.svg" alt="로고" width="300" height="300">
         </h1>
-        <h2 class="user-name">{{ user_name }}님 환영합니다</h2>
-        <div class="log-out">
-          <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
-        </div>
+        <h2>휴식을 시작할까요?</h2>
+
         <a href="/application/calculate">
           <button type="button">계산하기</button>
         </a>
@@ -73,11 +76,11 @@
   <div class="popup-content">
     <p class="popup-title">주무시겠어요?</p>
     <p class="popup-diff">
-      어제보다 <span class="highlight">{{ time_diff }}</span> 더 
+      어제보다 <span class="highlight">{{ sleeptime_diff }}</span> 더 
       <span class="highlight">{{ sleep_trend }}</span> 주무시네요.
     </p>
     <p class="popup-avg">
-      최근 3일간 그룹 평균 취침시간은 <span class="highlight">{{ group_avg }}</span> 입니다.
+      최근 3일간 그룹 평균 취침시간은 <span class="highlight">{{ groupsleep_avg }}</span> 입니다.
     </p>
     <div class="popup-btn-group">
       <button class="yes-btn" onclick="onSleepComfirm()">네</button>
@@ -87,13 +90,13 @@
 </div>
 <div class="custom-popup" id="wake-popup" style="display:none;">
   <div class="popup-content">
-    <p class="popup-title">주무시겠어요?</p>
+    <p class="popup-title">휴식을 종료하시겠어요?</p>
     <p class="popup-diff">
-      어제보다 <span class="highlight">{{ time_diff }}</span> 더 
-      <span class="highlight">{{ sleep_trend }}</span> 주무시네요.
+      어제보다 <span class="highlight">{{ waketime_diff }}</span> 더 
+      <span class="highlight">{{ wake_trend }}</span> 주무시네요.
     </p>
     <p class="popup-avg">
-      최근 3일간 그룹 평균 취침시간은 <span class="highlight">{{ group_avg }}</span> 입니다.
+      최근 3일간 그룹 평균 기상시간은 <span class="highlight">{{ groupwake_avg }}</span> 입니다.
     </p>
     <div class="popup-btn-group">
       <button class="yes-btn" onclick="onWakeComfirm()">네</button>
@@ -283,6 +286,7 @@
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         
         // 2자리로 포맷팅
+        
         const formattedHours = String(hours).padStart(2, '0');
         const formattedMinutes = String(minutes).padStart(2, '0');
         
@@ -318,17 +322,6 @@
       seconds = 0;
       console.log(formatTime(seconds)); // 00:00:00
     }
-    
-    // function updateStatusBox(status) {
-    //   const statusBox = $('.status-box');
-    //   if("{{duration}}" !== '00:00'){
-    //     statusBox.removeClass('off');
-    //     statusBox.addClass('on');
-    //   }else{
-    //     statusBox.removeClass('on');
-    //     statusBox.addClass('off');
-    //   }
-    // }
 
   </script>
 </body>

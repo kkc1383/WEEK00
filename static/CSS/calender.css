@@ -20,9 +20,15 @@
         /* 카테고리바보다 위로 올리고 싶으면 */
       }
 
-      .user-name {
-        margin: 0;
-        font-size: 17pt;
+      .user-bar .user-name {
+        flex: 1;
+        /* 핵심! */
+        text-align: center;
+        /* 가운데 정렬 */
+        font-size: 18px;
+        font-weight: bold;
+        white-space: nowrap;
+        /* 줄바꿈 방지 */
       }
 
       .btn-logout {
