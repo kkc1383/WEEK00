@@ -3,28 +3,20 @@
         background: #f0f0f0;
         margin: 0;
         padding: 40px;
-        display: flex;
-        justify-content: center;
       }
 
       .container {
         display: flex;
         gap: 80px;
-        align-items: flex-start;
+        align-items: stretch;
         max-width: 1200px;
         width: 100%;
-        align-items: stretch;
+        margin: 0 auto;
+        padding: 0 20px;
       }
 
       .calendar-wrapper {
         flex: 1;
-      }
-
-      h1 {
-        align-items: center;
-        gap: 20px;
-        font-size: 1.6rem;
-        color: #1d1d1d;
       }
 
       .page-title a {
@@ -38,13 +30,15 @@
       }
 
       .page-title {
-        max-width: 1200px;
-        width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 20px;
         margin-bottom: 30px;
+      }
+
+      .page-title h1 {
+        margin: 0;
       }
 
       .calendar {
