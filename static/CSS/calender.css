@@ -302,6 +302,7 @@ a:active {
   background: #fff;
   font-size: 0.95rem;
   transition: background 0.2s, color 0.2s;
+  aspect-ratio: 1 / 1;
 }
 
 .day.today {
