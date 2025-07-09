@@ -23,6 +23,7 @@
         <h1>{{ year }}년 {{ month }}월</h1>
         <a href="{{ url_for('calender', year=next_year, month=next_month) }}">▶</a>
       </div>
+      <div class="content-row">
       <div class="calendar-wrapper">
         <div class="calendar">
           <!-- 요일 헤더 -->
@@ -87,6 +88,7 @@
           <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
         </div>
       </div>
+    </div>
     </div>
 
   </body>
