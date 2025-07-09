@@ -36,7 +36,7 @@
         <div id="timer-display">00:00:00</div>
         <div class="timer-btn-group">
           <button class="timer-btn start" onclick="openObjectiveTimer()">시작</button>
-          <button class="timer-btn stop" onclick="stopTimer()">종료</button>
+          <button class="timer-btn stop" onclick="openWakePopup()">종료</button>
         </div>
       </section><!-- timer-wrapper -->
       <section class="objective-timer-wrapper">
@@ -80,8 +80,24 @@
       최근 3일간 그룹 평균 취침시간은 <span class="highlight">{{ group_avg }}</span> 입니다.
     </p>
     <div class="popup-btn-group">
-      <button class="yes-btn" onclick="onComfirm()">네</button>
+      <button class="yes-btn" onclick="onSleepComfirm()">네</button>
       <button class="no-btn" onclick="closeSleepPopup()">아니오</button>
+    </div>
+  </div>
+</div>
+<div class="custom-popup" id="wake-popup" style="display:none;">
+  <div class="popup-content">
+    <p class="popup-title">주무시겠어요?</p>
+    <p class="popup-diff">
+      어제보다 <span class="highlight">{{ time_diff }}</span> 더 
+      <span class="highlight">{{ sleep_trend }}</span> 주무시네요.
+    </p>
+    <p class="popup-avg">
+      최근 3일간 그룹 평균 취침시간은 <span class="highlight">{{ group_avg }}</span> 입니다.
+    </p>
+    <div class="popup-btn-group">
+      <button class="yes-btn" onclick="onWakeComfirm()">네</button>
+      <button class="no-btn" onclick="closeWakePopup()">아니오</button>
     </div>
   </div>
 </div>
@@ -188,9 +204,20 @@
     function closeSleepPopup() {
       document.getElementById('sleep-popup').style.display = 'none';
     }
-    function onComfirm(){
+    function onSleepComfirm(){
       closeSleepPopup();
       startTimer();
+    }
+    function openWakePopup() {
+      document.getElementById('wake-popup').style.display = 'flex';
+    }
+
+    function closeWakePopup() {
+      document.getElementById('wake-popup').style.display = 'none';
+    }
+    function onWakeComfirm(){
+      closeWakePopup();
+      stopTimer();
     }
 
     function startTimer() {
