@@ -45,7 +45,7 @@ def get_duration(start,end):
         나중에 실제로 서비스 할때는 60->3600으로 바꾸면 시: 분이 duration에 저장됨
     '''
     hours, remainder=divmod(int(total_seconds),60) 
-    minutes=remainder//60
+    minutes=remainder  # 실제로 서비스 할때는 60으로 나눈 몫이 필요함 //60
 
     return f"{hours:02d}:{minutes:02d}"
 
