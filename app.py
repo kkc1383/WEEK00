@@ -215,11 +215,6 @@ def get_status():
             'status':'sleeping',
             'elapsed_seconds':elapsed_seconds,
         })
-    elif record:
-        return jsonify({
-            'result':'success',
-            'status':'not_sleeping'
-            })
     else:
         return jsonify({'result':"failure"})
 

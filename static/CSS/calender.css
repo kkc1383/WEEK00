@@ -63,7 +63,8 @@
       }
 
       .day.today {
-        border: 3px solid #1d1d1d; !important;
+        border: 3px solid #1d1d1d;
+        !important;
         font-weight: bold;
       }
 
@@ -84,6 +85,11 @@
         /* 실패: 깔끔한 선명한 빨강 */
         color: #fff;
         border: none;
+      }
+
+      .day.fail.today,
+      .day.success.today {
+        border: 3px solid #1d1d1d;
       }
 
       .stats-box {
