@@ -218,7 +218,7 @@ def application():
        decoded=jwt.decode(token, app.config['SECRET_KEY'],algorithms=['HS256'])
        user_id=decoded['user_id']
        user_name=decoded['user_name']
-       users=get_sleep_users_data()
+       users=get_sleep_users_data(user_id)
        return render_template('application.html',
                               users=users,
                               user_id=user_id,
@@ -229,8 +229,8 @@ def application():
    except jwt.InvalidTokenError:
        return "유효하지 않은 토큰입니다."
    
-def get_sleep_users_data():
-    users= list(db.accounts.find({})) # 모든 사용자 정보 가져오기
+def get_sleep_users_data(user_id):
+    users= list(db.accounts.find({'id':{'$ne':user_id}})) # 모든 사용자 정보 가져오기
     sleep_status={}
     for user in users:
         record=db.sleepdata.find_one({'name':user['name'],'sleep_end':0})
