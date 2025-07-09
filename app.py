@@ -196,7 +196,7 @@ def start_sleep():
         sleepData={
             'id':id_receive,
             'name':name_receive,
-            'sleep_start':datetime.utcnow(),
+            'sleep_start':datetime.utcnow()+timedelta(hours=9),
             'sleep_end':0,
             'wakeup_goal':wakeup_goal_receive,
             'duration':0,
@@ -214,7 +214,7 @@ def end_sleep():
     user=db.sleepdata.find_one({'id':id_receive,'name':name_receive,'sleep_end':0})
     if not user:
         return jsonify({'result':'failure'})
-    sleep_end=datetime.utcnow()
+    sleep_end=datetime.utcnow()+timedelta(hours=9)
     duration=get_duration(sleep_end,user['sleep_start'])
     
     h,m=map(int,user['wakeup_goal'].split(":"))
@@ -239,7 +239,7 @@ def calender():
         
 
         # 여기서부터 이번 달 수면 데이터 처리
-        now=datetime.utcnow()
+        now=datetime.utcnow()+timedelta(hours=9)
         year=request.args.get('year',default=now.year, type=int)
         month=request.args.get('month',default=now.month, type=int)
 
@@ -404,7 +404,8 @@ def calender():
                            days_in_month=days_in_month,
                            sleep_status=sleep_status,
                            my_stats=my_stats,
-                           group_stats=group_stats)
+                           group_stats=group_stats,
+                           now=now)
     except jwt.ExpiredSignatureError:
         return "토큰이 만료되었습니다. 다시 로그인해주세요."
     except jwt.InvalidTokenError:
