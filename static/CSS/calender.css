@@ -63,7 +63,7 @@
       }
 
       .day.today {
-        border: 3px solid #1d1d1d;
+        border: 3px solid #1d1d1d; !important;
         font-weight: bold;
       }
 
