@@ -17,7 +17,7 @@ app = Flask(__name__)
 client=MongoClient('mongodb://test:test@3.34.90.101',27017)
 db=client.dbAccounts
 app.config['SECRET_KEY']='1q2w3e4r!'  # secret key
-
+now=datetime.utcnow()+timedelta(hours=9)
 
 class CustomJSONEncoder(json.JSONEncoder): 
     def default(self, o):
@@ -137,12 +137,12 @@ def login():
         access_token=jwt.encode({
             'user_id':id_receive,
             'user_name':found_user['name'],
-            'exp':datetime.utcnow()+timedelta(minutes=15)
+            'exp':now+timedelta(minutes=15)
         }, app.config['SECRET_KEY'],  algorithm='HS256')
         refresh_token=jwt.encode({
             'user_id':id_receive,
             'user_name':found_user['name'],
-            'exp':datetime.utcnow()+timedelta(days=7)
+            'exp':now+timedelta(days=7)
         }, app.config['SECRET_KEY'], algorithm='HS256')
         db.tokens.update_one(
             {'user_id':id_receive, 'user_name':found_user['name']},
@@ -169,7 +169,7 @@ def refresh():
             new_access_token=jwt.encode({
                 'user_id':user_id,
                 'user_name':user_name,
-                'exp':datetime.utcnow()+timedelta(minutes=15)
+                'exp':now+timedelta(minutes=15)
             },app.config['SECRET_KEY'],algorithm='HS256')
             return jsonify({'result':'success','access_token':new_access_token})
         else:
@@ -189,7 +189,22 @@ def application():
        user_id=decoded['user_id']
        user_name=decoded['user_name']
        users= list(db.accounts.find({})) # 모든 사용자 정보 가져오기
-       return render_template('application.html',users=users,user_id=user_id, user_name=user_name)
+       
+       sleep_status={}
+       for user in users:
+           record=db.sleepdata.find_one({'name':user['name']})
+           if record: # sleepdata db에서 해당하는 이름을 찾았을 경우
+               if record['sleep_end']==0: # 수면 중일 경우
+                    during_time=now-record['sleep_start']
+                    sleep_status[record['name']]=get_duration(record['sleep_start'],now)
+               else:
+                sleep_status[record['name']]="00:00"
+                        
+       return render_template('application.html',
+                              users=sleep_status,
+                              user_id=user_id,
+                              user_name=user_name
+                              )
    except jwt.ExpiredSignatureError:
        return "토큰이 만료되었습니다. 다시 로그인해주세요."
    except jwt.InvalidTokenError:
@@ -207,7 +222,6 @@ def get_status():
     })
     if record and 'sleep_start' in record:
         sleep_start=record['sleep_start']
-        now=datetime.utcnow()+timedelta(hours=9)
 
         elapsed_seconds=int((now-sleep_start).total_seconds())
         return jsonify({
@@ -228,7 +242,7 @@ def start_sleep():
         sleepData={
             'id':id_receive,
             'name':name_receive,
-            'sleep_start':datetime.utcnow()+timedelta(hours=9),
+            'sleep_start':now,
             'sleep_end':0,
             'wakeup_goal':wakeup_goal_receive,
             'duration':0,
@@ -246,7 +260,7 @@ def end_sleep():
     user=db.sleepdata.find_one({'id':id_receive,'name':name_receive,'sleep_end':0})
     if not user:
         return jsonify({'result':'failure'})
-    sleep_end=datetime.utcnow()+timedelta(hours=9)
+    sleep_end=now
     duration=get_duration(user['sleep_start'],sleep_end)
     
     h,m=map(int,user['wakeup_goal'].split(":"))
@@ -271,7 +285,6 @@ def calender():
         
 
         # 여기서부터 이번 달 수면 데이터 처리
-        now=datetime.utcnow()+timedelta(hours=9)
         year=request.args.get('year',default=now.year, type=int)
         month=request.args.get('month',default=now.month, type=int)
 
