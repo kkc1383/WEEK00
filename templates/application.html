@@ -80,7 +80,7 @@
       최근 3일간 그룹 평균 취침시간은 <span class="highlight">{{ group_avg }}</span> 입니다.
     </p>
     <div class="popup-btn-group">
-      <button class="yes-btn" onclick="confirmSleep()">네</button>
+      <button class="yes-btn" onclick="onComfirm()">네</button>
       <button class="no-btn" onclick="closeSleepPopup()">아니오</button>
     </div>
   </div>
@@ -100,6 +100,7 @@
     let startTime = null;
     let totalStartTime = null; // totalStartTime 변수 정의
     let inputValue = null;
+    let wakeup_goal=null;
 
     // 사용자 정보 변수 정의 (Django 템플릿 변수 사용)
     const userId = "{{ user_id|default('guest') }}";
@@ -168,16 +169,15 @@
     }
 
     function closeObjectiveTimer() {
-      inputValue = document.getElementById('targetTime').value;
+      wakeup_goal = document.getElementById('targetTime').value;
 
-      if (!inputValue) {
+      if (!wakeup_goal) {
         alert('목표 수면 시간 설정 실패! 다시 설정 해주세요~!');
         return;
       }
 
       document.querySelector('.objective_time').classList.remove('on');
       document.querySelector('.objective_timer').style.display = 'none';
-
       openSleepPopup();
     }
 
@@ -188,14 +188,12 @@
     function closeSleepPopup() {
       document.getElementById('sleep-popup').style.display = 'none';
     }
-
-    function confirmSleep() {
-      closeSleepPopup();
-      startTimer(inputValue);
+    function onComfirm(){
+      closePop();
+      startTimer();
     }
 
-
-    function startTimer(wakeup_goal) {
+    function startTimer() {
       totalStartTime = new Date();
       const date = totalStartTime.getDate();
       const month = totalStartTime.getMonth() + 1;
@@ -221,9 +219,9 @@
         },
         success: function (response) {
           if (response['result'] === 'success') {
-            //alert('성공');
+            alert('성공');
           } else {
-            //alert('이미 수면이 시작되었습니다!');
+            alert('이미 수면이 시작되었습니다!');
           }
         },
         error: function(xhr, status, error) {
