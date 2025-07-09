@@ -30,8 +30,12 @@
         <h1 class="logo">
           <img src="../static/images/logo.svg" alt="로고" width="300" height="300">
         </h1>
-        <h1>휴식을 시작할까요?</h1>
-       
+        <h2>휴식을 시작할까요?</h2>
+
+        <a href="/application/calculate">
+          <button type="button">계산하기</button>
+        </a>
+        
         <div id="timer-display">00:00:00</div>
         <div class="timer-btn-group">
           <button class="timer-btn start" onclick="openObjectiveTimer()">시작</button>
@@ -50,7 +54,7 @@
       </section><!-- objective-timer-wrapper -->
       <section class="user-list-wrapper">
         <div class="user-list">
-          {% for name, duration in users.items() %}
+          <!-- {% for name, duration in users.items() %}
             <div class="user-card">
               <div class="status-box {{'on' if duration !='00:00' else 'off'}}">상태박스</div>
               <div class="inner-text">
@@ -58,7 +62,7 @@
                 <div class="user-timer">{{duration}}</div>
               </div>
             </div>
-          {% endfor %}
+          {% endfor %} -->
         </div>
         <div class="category-bar">
             <button class="category-btn disabled">오늘의 기록</button>
@@ -159,6 +163,31 @@
         }
       });
     }
+    function refreshUserList() {
+      $.post('/application/refresh', {}, function (res) {
+        if (res.result === 'success') {
+          const userList = $('#user-list');
+          userList.empty(); // 기존 제거
+
+          for (const [name, duration] of Object.entries(res.users)) {
+            const statusClass = duration !== '00:00' ? 'on' : 'off';
+            const card = `
+              <div class="user-card">
+                <div class="status-box ${statusClass}">상태박스</div>
+                <div class="inner-text">
+                  <div class="user-name">${name}</div>
+                  <div class="user-timer">${duration}</div>
+                </div>
+              </div>
+            `;
+            userList.append(card);
+          }
+        }
+      });
+    }
+    // 1분마다 갱신
+    setInterval(refreshUserList, 60000);
+
     window.onload=function(){
       $.ajax({
         type:'POST',
