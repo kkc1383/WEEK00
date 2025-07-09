@@ -12,15 +12,16 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
+    <div class="page-title">
+      <h1>
+        <!-- ✅ a href로 연/월 이동 -->
+        <a href="{{ url_for('calender', year=prev_year, month=prev_month) }}">◀</a>
+        <span>{{ year }}년 {{ month }}월</span>
+        <a href="{{ url_for('calender', year=next_year, month=next_month) }}">▶</a>
+      </h1>
+    </div>
     <div class="container">
       <div class="calendar-wrapper">
-        <h1>
-          <!-- ✅ a href로 연/월 이동 -->
-          <a href="{{ url_for('calender', year=prev_year, month=prev_month) }}">◀</a>
-          <span>{{ year }}년 {{ month }}월</span>
-          <a href="{{ url_for('calender', year=next_year, month=next_month) }}">▶</a>
-        </h1>
-
         <div class="calendar">
           <!-- 요일 헤더 -->
           {% for d in ['일', '월', '화', '수', '목', '금', '토'] %}
