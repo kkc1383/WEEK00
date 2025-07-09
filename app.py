@@ -2,7 +2,7 @@ from collections import defaultdict
 from bson import ObjectId
 from pymongo import MongoClient
 
-from flask import Flask, render_template, jsonify, request, redirect
+from flask import Flask, render_template, jsonify, request, redirect, make_response
 from flask.json.provider import JSONProvider
 from datetime import datetime, timedelta
 import jwt
@@ -150,6 +150,7 @@ def login():
         return resp
     else:
         return jsonify({'result':'failure'})
+    
 @app.route('/refresh',methods=['POST'])
 def refresh():
     refresh_token=request.cookies.get('refresh_token')
@@ -175,6 +176,24 @@ def refresh():
         return jsonify({'result':'expired'}),401
     except jwt.InvalidTokenError:
         return jsonify({'result':'invalid'}),401
+
+@app.route('/logout',methods=['POST']) # 로그아웃 
+def logout():
+    token=request.cookies.get('access.token')
+    if not token:
+        return redirect('/')
+    
+    try:
+        decoded=jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        user_id=decoded['user_id']
+    except jwt.InvalidTokenError:
+        return redirect('/')
+
+    response=make_response(redirect('/'))
+    response.set_cookie('access_token', '',expires=0)
+    response.set_cookie('refresh_token','',expires=0)
+    db.tokens.delete_one({'user_id':user_id})
+    return response
     
 @app.route('/application') # application으로 라우팅 한 부분
 def application():
