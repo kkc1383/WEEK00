@@ -121,6 +121,7 @@
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    width: 100%;
   }
 
   .day {
@@ -521,37 +522,16 @@
 
 
   @media (max-width: 768px) {
-    body {
-      font-family: 'Noto Sans KR', Arial, sans-serif;
-      background: #d2d2d2;
+
+    body, html {
       margin: 0;
-      padding: 40px;
+      padding: 20px;
+      font-size: 14px;
     }
-
-    /* 리셋 */
-    button {
-      background: inherit;
-      border: none;
-      box-shadow: none;
-      border-radius: 0;
-      padding: 0;
-      overflow: visible;
-      cursor: pointer
+    .wrapper {
+      width: auto;
+      margin: 0 20px;
     }
-
-    a {
-      color: #fff;
-      text-decoration: none;
-      outline: none
-    }
-
-    a:hover,
-    a:active {
-      text-decoration: none;
-      color: #fff;
-      background-color: #f59000;
-    }
-
     .user-bar {
       position: fixed;
       top: 0;
@@ -589,11 +569,11 @@
     }
 
     .container {
-      max-width: 1280px;
+      max-width: 640px;
       width: 100%;
       margin: 60px auto 0;
-      margin-bottom: 95px 80px;
-      padding: 0 20px;
+      margin-bottom: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
       gap: 50px;
@@ -630,6 +610,7 @@
 
     .content-row {
       display: flex;
+      flex-direction: column;
       gap: 80px;
       align-items: stretch;
       width: 100%;
@@ -644,6 +625,7 @@
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      width: calc(100% - 40px);
     }
 
     .day {
@@ -821,35 +803,6 @@
       color: #fff;
       border-radius: 4px;
       cursor: pointer;
-    }
-
-    /* 리셋 */
-    button {
-      background: inherit;
-      border: none;
-      box-shadow: none;
-      border-radius: 0;
-      padding: 0;
-      overflow: visible;
-      cursor: pointer
-    }
-
-    a {
-      color: #fff;
-      text-decoration: none;
-      outline: none
-    }
-
-    a:hover,
-    a:active {
-      text-decoration: none;
-      color: #fff;
-      background-color: #f59000;
-    }
-
-    .wrapper {
-      width: 1440px;
-      margin: 0 auto;
     }
 
     section {
