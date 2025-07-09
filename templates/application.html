@@ -45,7 +45,8 @@
   <div class="user-list">
     {% for name, duration in users.items() %}
       <div class="user-card">
-        <div class="profile-box"></div>
+        <div class="profile-box on"></div>
+        <div class="profile-box off"></div>
         <div class="user-name">{{ name }}</div>
         <div class="user-timer">{{duration}}</div>
       </div>
