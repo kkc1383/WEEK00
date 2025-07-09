@@ -48,7 +48,11 @@ def get_duration(start,end):
 
     return f"{hours:02d}:{minutes:02d}"
 
+def parse_duration(s):
+    h,m=map(int,s.split(":"))
+    return h*60+m
 
+def to_hhmm(m): return f"{m // 60:02d}:{m%60:02d}"
 
 
 @app.route('/')
@@ -219,10 +223,74 @@ def application():
        user_id=decoded['user_id']
        user_name=decoded['user_name']
        users=get_sleep_users_data(user_id)
+       now=datetime.utcnow()+timedelta(hours=9)
+       if 0<=now.hour<= 10: # 오늘이 늦은 새벽일 경우 sleep_end와 오늘이 다른날이기 때문에 1일을 빼줌
+           yesterday_start=(now-timedelta(days=1)).replace(hour=0,minute=0,second=0,microsecond=0)   # 어제 나의 데이터 찾기 위한 시작 지점
+           threeday_group_start=(now-timedelta(days=4)).replace(hour=0,minute=0,second=0,microsecond=0)   # 최근 3일 그룹 데이터 찾기 위한 시작 지점
+       else: # 어제 수면 데이터의 sleep_end는 오늘과 같은 날일 거니까
+           yesterday_start=now.replace(hour=0,minute=0,second=0,microsecond=0)
+           threeday_group_start=(now-timedelta(days=3)).replace(hour=0,minute=0,second=0,microsecond=0)   
+
+       yesterday_end=yesterday_start+timedelta(days=1) # 어제 나의 데이터 찾기 위한 끝 지점
+       threeday_group_end=threeday_group_start+timedelta(days=1) # 최근 3일 그룹 데이터 찾기 위한 끝 지점
+       
+       yesterday_data=db.sleepdata.find_one({'id':user_id,'name':user_name,'sleep_end':{'$gte':yesterday_start,'$lt':yesterday_end}})
+       if yesterday_data:
+           isExistYesterday=True
+           sleeptime_rough=now-yesterday_data['sleep_start'].total_seconds()
+           waketime_rough=now-yesterday_data['sleep_end'].total_seconds()
+           if sleeptime_rough < 0:
+                sleep_trend="일찍"
+           else:
+                sleep_trend="늦게"
+           if waketime_rough <0 :
+                wake_trend="일찍"
+           else:
+                wake_trend="늦게"
+
+           sleeptime_gap=abs(sleeptime_rough)
+           sleep_hours, sleep_remainder=divmod(int(sleeptime_gap),3600) 
+           sleep_minutes=sleep_remainder//60 
+           sleeptime_diff=f"{sleep_hours}시간 {sleep_minutes}분"
+
+           waketime_gap=abs(waketime_rough)
+           wake_hours, wake_remainder=divmod(int(waketime_gap),3600) 
+           wake_minutes=wake_remainder//60 
+           waketime_diff=f"{wake_hours}시간 {wake_minutes}분"
+       else:
+           isExistYesterday=False
+           sleeptime_diff=""
+           sleep_trend=""
+           waketime_diff=""
+           wake_trend=""
+
+
+       threeday_data=db.sleepdata.find({'sleep_end':{'$gte':threeday_group_start,'$lt':threeday_group_end}})
+
+       group_duration=[parse_duration(r['duration'])for r in threeday_data if r.get('duration') and r['duration'] != "0"]
+       groupsleep_avg=to_hhmm(sum(group_duration)//len(group_duration))
+
+       wakeup_datetimes = [r['sleep_end'] for r in threeday_data if r.get('sleep_end') and isinstance(r['sleep_end'], datetime)]
+
+       if wakeup_datetimes:
+            avg_seconds = sum(dt.hour * 3600 + dt.minute * 60 for dt in wakeup_datetimes) // len(wakeup_datetimes)
+            avg_hour = avg_seconds // 3600
+            avg_min = (avg_seconds % 3600) // 60
+            groupwake_avg = f"{avg_hour:02d}:{avg_min:02d}"
+       else:
+            groupwake_avg = "00:00"
+
        return render_template('application.html',
                               users=users,
                               user_id=user_id,
-                              user_name=user_name
+                              user_name=user_name,
+                              sleeptime_diff=sleeptime_diff,
+                              sleep_trend=sleep_trend,
+                              waketime_diff=waketime_diff,
+                              wake_trend=wake_trend,
+                              groupsleep_avg=groupsleep_avg,
+                              groupwake_avg=groupwake_avg,
+                              isExistYesterday=isExistYesterday
                               )
    except jwt.ExpiredSignatureError:
        return "토큰이 만료되었습니다. 다시 로그인해주세요."
@@ -361,9 +429,6 @@ def calender():
                 if record.get('id')==user_id and record.get('name')==user_name:
                     my_records.append(record)
 
-        def parse_duration(s):
-            h,m=map(int,s.split(":"))
-            return h*60+m
         
         # 이번달 내 데이터 처리 관련
         my_durations=[parse_duration(r['duration'])for r in my_records if r.get('duration') and r['duration'] != "0"]
@@ -392,7 +457,6 @@ def calender():
             avg_min=sum(my_durations) //len(my_durations)
             max_min=max(my_durations)
             min_min=min(my_durations)
-            def to_hhmm(m): return f"{m // 60:02d}:{m%60:02d}"
             my_stats={
                 'avg_sleep':to_hhmm(avg_min),
                 'goal_count':f"{achieved_count}/{days_in_month}",
