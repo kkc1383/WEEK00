@@ -81,6 +81,12 @@
     },
     error: function(xhr, status, error) {
       alert("로그아웃 중 오류가 발생했습니다.");
+      $.post("/logout", function () {
+        alert('로그아웃 성공!')
+        window.location.href = "/";
+      }).fail(function () {
+        alert("로그아웃 중 오류가 발생했습니다.");
+      });
     }
   });
   }
