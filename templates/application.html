@@ -30,12 +30,13 @@
         <h1 class="logo">
           <img src="../static/images/logo.svg" alt="로고" width="300" height="300">
         </h1>
-        <h2>휴식을 시작할까요?</h2>
-
-        <a href="/application/calculate">
-          <button type="button">계산하기</button>
-        </a>
-        
+        {% if is_sleeping %}  <!-- 수면 중일 때 -->
+          <h2>휴식을 종료할까요?</h2>
+          <h3>좋은 아침입니다! 오늘 하루도 화이팅!</h3>
+        {% else %}            <!-- 수면 중이 아닐 때 -->
+          <h2>휴식을 시작할까요?</h2>
+          <h3>오늘 하루도 고생하셨습니다!</h3>
+        {% endif %}
         <div id="timer-display">00:00:00</div>
         <div class="timer-btn-group">
           <button class="timer-btn start" onclick="openObjectiveTimer()">시작</button>
@@ -138,11 +139,21 @@
     let totalStartTime = null; // totalStartTime 변수 정의
     let inputValue = null;
     let wakeup_goal=null;
-
     // 사용자 정보 변수 정의 (Django 템플릿 변수 사용)
     const userId = "{{ user_id|default('guest') }}";
     const userName = "{{ user_name|default('게스트') }}";
-
+    
+    function onGoingTimer(){
+      if ({{ is_sleeping | tojson }}){
+          seconds={{ elapsed_seconds}};
+          updateTimerDisplay();
+          timer=setInterval(() => {
+            seconds++;
+            updateTimerDisplay();
+          },1000);
+      }
+    }
+    onGoingTimer();
     function logout() {
       $.post("/logout", function () {
         alert('로그아웃 성공!')
@@ -163,29 +174,6 @@
         }
       });
     }
-    window.onload=function(){
-      $.ajax({
-        type:'POST',
-        url:'/application/status',
-        data:{'user_id':userId,'user_name':userName},
-        success:function(res){
-          if(res.status==='sleeping'){
-            //alert('현재 수면 중이시군요')
-            seconds=res.elapsed_seconds;
-            updateTimerDisplay();
-            //TODO ~~님은 현재 수면 중입니다.
-            timer=setInterval(() => {
-              seconds++;
-              updateTimerDisplay();
-            },1000);
-          }
-          else{
-            //alert('현재 수면 중이 아님')
-          }
-        }
-      })
-    }
-    
 
     function formatTime(totalSeconds) {
       const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
@@ -200,6 +188,7 @@
     }
 
     function openObjectiveTimer() {
+      if({{is_sleeping|tojson}}) return;
       document.querySelector('.objective_time').classList.add('on');
       document.querySelector('.objective_timer').style.display = 'block';
     }
@@ -229,6 +218,7 @@
       startTimer();
     }
     function openWakePopup() {
+      if(!{{is_sleeping|tojson}}) return;
       document.getElementById('wake-popup').style.display = 'flex';
     }
 
