@@ -236,16 +236,22 @@ def get_sleep_users_data():
         record=db.sleepdata.find_one({'name':user['name']})
         if record and record['sleep_end']==0: # sleepdata db에서 해당하는 이름을 찾았을 경우
             now=datetime.utcnow()+timedelta(hours=9)
-            during_time=now-record['sleep_start']
             sleep_status[user['name']]=get_duration(record['sleep_start'],now)
+            print(sleep_status[user['name']])
         else:
             sleep_status[user['name']]="00:00"
     return sleep_status
 
 @app.route('/application/refresh',methods=['POST'])
 def refresh_user_data():
+    user_id=request.form['user_id']
+    user_name=request.form['user_name']
     sleep_users_data=get_sleep_users_data()
-    return jsonify({"result":"success","user":sleep_users_data})
+    return render_template('application.html',
+                           users=sleep_users_data,
+                           user_id=user_id,
+                           user_name=user_name
+                           )
 
 @app.route('/application/status',methods=['POST'])
 def get_status():
@@ -479,6 +485,8 @@ def calender():
             'max_goal': max_goal
         }
         return render_template('calender.html',
+                            user_id=user_id,
+                            user_name=user_name,
                            year=year,
                            month=month,
                            prev_year=prev_year, prev_month=prev_month,
