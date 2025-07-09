@@ -17,7 +17,6 @@ app = Flask(__name__)
 client=MongoClient('mongodb://test:test@3.34.90.101',27017)
 db=client.dbAccounts
 app.config['SECRET_KEY']='1q2w3e4r!'  # secret key
-now=datetime.utcnow()+timedelta(hours=9)
 
 class CustomJSONEncoder(json.JSONEncoder): 
     def default(self, o):
@@ -39,10 +38,6 @@ def get_duration(start,end):
 
     duration=end-start
     total_seconds=duration.total_seconds()
-    print(duration)
-    print(end)
-    print(start)
-    print(total_seconds)
     ''' 
         디버깅에 용이함을 위해 시:분이 저장되어야 할 것을 한 단계 낮추어
         분:초가 저장되게끔 바꾸었음
@@ -134,6 +129,7 @@ def login():
     pw_receive=request.form['password_give']
     found_user=db.accounts.find_one({'id':id_receive})
     if found_user['pw']==pw_receive:
+        now=datetime.utcnow()+timedelta(hours=9)
         access_token=jwt.encode({
             'user_id':id_receive,
             'user_name':found_user['name'],
@@ -166,6 +162,7 @@ def refresh():
         user_name=payload['user_name']
         stored=db.tokens.find_one({'user_id':user_id, 'user_name':user_name})
         if stored and stored['refresh_token']==refresh_token:
+            now=datetime.utcnow()+timedelta(hours=9)
             new_access_token=jwt.encode({
                 'user_id':user_id,
                 'user_name':user_name,
@@ -193,12 +190,12 @@ def application():
        sleep_status={}
        for user in users:
            record=db.sleepdata.find_one({'name':user['name']})
-           if record: # sleepdata db에서 해당하는 이름을 찾았을 경우
-               if record['sleep_end']==0: # 수면 중일 경우
-                    during_time=now-record['sleep_start']
-                    sleep_status[record['name']]=get_duration(record['sleep_start'],now)
-               else:
-                sleep_status[record['name']]="00:00"
+           if record and record['sleep_end']==0: # sleepdata db에서 해당하는 이름을 찾았을 경우
+                now=datetime.utcnow()+timedelta(hours=9)
+                during_time=now-record['sleep_start']
+                sleep_status[user['name']]=get_duration(record['sleep_start'],now)
+           else:
+                sleep_status[user['name']]="00:00"
                         
        return render_template('application.html',
                               users=sleep_status,
@@ -222,7 +219,7 @@ def get_status():
     })
     if record and 'sleep_start' in record:
         sleep_start=record['sleep_start']
-
+        now=datetime.utcnow()+timedelta(hours=9)
         elapsed_seconds=int((now-sleep_start).total_seconds())
         return jsonify({
             'result':'success',
@@ -242,7 +239,7 @@ def start_sleep():
         sleepData={
             'id':id_receive,
             'name':name_receive,
-            'sleep_start':now,
+            'sleep_start':datetime.utcnow()+timedelta(hours=9),
             'sleep_end':0,
             'wakeup_goal':wakeup_goal_receive,
             'duration':0,
@@ -260,7 +257,7 @@ def end_sleep():
     user=db.sleepdata.find_one({'id':id_receive,'name':name_receive,'sleep_end':0})
     if not user:
         return jsonify({'result':'failure'})
-    sleep_end=now
+    sleep_end=datetime.utcnow()+timedelta(hours=9)
     duration=get_duration(user['sleep_start'],sleep_end)
     
     h,m=map(int,user['wakeup_goal'].split(":"))
@@ -285,6 +282,7 @@ def calender():
         
 
         # 여기서부터 이번 달 수면 데이터 처리
+        now=datetime.utcnow()+timedelta(hours=9)
         year=request.args.get('year',default=now.year, type=int)
         month=request.args.get('month',default=now.month, type=int)
 

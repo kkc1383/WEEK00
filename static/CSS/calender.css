@@ -119,3 +119,33 @@
         font-weight: 500;
         color: #1d1d1d;
       }
+
+      .category-bar {
+        position: fixed;
+        bottom: 0;
+        /* 화면 맨 아래 고정 */
+        left: 0;
+        width: 100%;
+        /* 가로 100% */
+        display: flex;
+        border-top: 1px solid #ddd;
+        background: #fff;
+        z-index: 999;
+        /* 다른 요소보다 위에 */
+      }
+
+      .category-btn {
+        flex: 1;
+        text-align: center;
+        text-decoration: none;
+        padding: 15px 0;
+        background: #ffffff;
+        font-weight: bold;
+        color: #000;
+        border: 1px solid #ddd;
+        border-top: none;
+      }
+
+      .category-btn:hover {
+        background: #f5f5f5;
+      }
