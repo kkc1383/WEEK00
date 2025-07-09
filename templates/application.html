@@ -53,7 +53,7 @@
           </div>
       </section><!-- objective-timer-wrapper -->
       <section class="user-list-wrapper">
-        <div class="user-list">
+        <div class="user-list" id="user-list">
           {% for name, duration in users.items() %}
             <div class="user-card">
               <div class="status-box {{'on' if duration !='00:00' else 'off'}}">상태박스</div>
@@ -62,7 +62,7 @@
                 <div class="user-timer">{{duration}}</div>
               </div>
             </div>
-          {% endfor %} -->
+          {% endfor %}
         </div>
         <div class="category-bar">
             <button class="category-btn disabled">오늘의 기록</button>
@@ -186,7 +186,6 @@
       })
     }
     
-    setInterval(()=>location.reload(),60000);
 
     function formatTime(totalSeconds) {
       const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
@@ -341,6 +340,35 @@
       console.log(formatTime(seconds)); // 00:00:00
     }
 
+    function refreshUserList() {
+      $.post('/application/refresh', {'user_id': userId}, function (res) {
+        if (res.result === 'success') {
+          const userList = $('#user-list');
+          userList.empty();
+          for (const [name, duration] of Object.entries(res.users)) {
+            const statusClass = duration !== '00:00' ? 'on' : 'off';
+            const card = `
+              <div class="user-card">
+                <div class="status-box ${statusClass}">상태박스</div>
+                <div class="inner-text">
+                  <div class="user-name">${name}</div>
+                  <div class="user-timer">${duration}</div>
+                </div>
+              </div>
+            `;
+            userList.append(card);
+          }
+        } else {
+          console.warn('Refresh 실패:', res);
+        }
+      }).fail(function () {
+        console.error('AJAX 요청 실패!');
+      });
+    }
+
+    // 초기 실행 + 반복 실행
+    refreshUserList();
+    setInterval(refreshUserList, 60000);
   </script>
 </body>
 </html>
