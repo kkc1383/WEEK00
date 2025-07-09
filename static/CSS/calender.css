@@ -9,6 +9,7 @@
         max-width: 1200px;
         width: 100%;
         margin: 60px auto 0;
+        margin-bottom: 80px;
         padding: 0 20px;
       }
 
@@ -126,8 +127,8 @@
 
       .category-bar {
         position: fixed;
-        top: 0;
-        /* 화면 맨 위 고정 */
+        bottom: 0;
+        /* 화면 맨 아래 고정 */
         left: 0;
         width: 100%;
         /* 가로 100% */
