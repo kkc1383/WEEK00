@@ -55,6 +55,15 @@ def get_duration(start,end):
 def home():
    return render_template('login.html')
 
+@app.route('/application/calculate')
+def calculate():
+    datas=db.sleepdata.find({})
+    for data in datas:
+        duration=get_duration(data['sleep_start'],data['sleep_end'])
+        h,m=map(int,data['wakeup_goal'].split(":"))
+        goal=data['sleep_end'].replace(hour=h, minute=m, second=0, microsecond=0)
+        isAchieved=(data['sleep_end']<=goal)
+        db.sleepdata.update_one({'_id':data['_id']},{'$set':{'duration':duration,'isAchieved':isAchieved}})
 
 @app.route('/register') # register로 라우팅 한 부분
 def register():
@@ -204,20 +213,9 @@ def application():
        decoded=jwt.decode(token, app.config['SECRET_KEY'],algorithms=['HS256'])
        user_id=decoded['user_id']
        user_name=decoded['user_name']
-       users= list(db.accounts.find({})) # 모든 사용자 정보 가져오기
-       
-       sleep_status={}
-       for user in users:
-           record=db.sleepdata.find_one({'name':user['name']})
-           if record and record['sleep_end']==0: # sleepdata db에서 해당하는 이름을 찾았을 경우
-                now=datetime.utcnow()+timedelta(hours=9)
-                during_time=now-record['sleep_start']
-                sleep_status[user['name']]=get_duration(record['sleep_start'],now)
-           else:
-                sleep_status[user['name']]="00:00"
-                        
+       users=get_sleep_users_data()
        return render_template('application.html',
-                              users=sleep_status,
+                              users=users,
                               user_id=user_id,
                               user_name=user_name
                               )
@@ -225,6 +223,24 @@ def application():
        return "토큰이 만료되었습니다. 다시 로그인해주세요."
    except jwt.InvalidTokenError:
        return "유효하지 않은 토큰입니다."
+   
+def get_sleep_users_data():
+    users= list(db.accounts.find({})) # 모든 사용자 정보 가져오기
+    sleep_status={}
+    for user in users:
+        record=db.sleepdata.find_one({'name':user['name']})
+        if record and record['sleep_end']==0: # sleepdata db에서 해당하는 이름을 찾았을 경우
+            now=datetime.utcnow()+timedelta(hours=9)
+            during_time=now-record['sleep_start']
+            sleep_status[user['name']]=get_duration(record['sleep_start'],now)
+        else:
+            sleep_status[user['name']]="00:00"
+    return sleep_status
+
+@app.route('/application/refresh',methods=['POST'])
+def refresh_user_data():
+    sleep_users_data=get_sleep_users_data()
+    return jsonify({"result":"success","user":sleep_users_data})
 
 @app.route('/application/status',methods=['POST'])
 def get_status():
