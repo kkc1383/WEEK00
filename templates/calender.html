@@ -27,11 +27,8 @@
     </script>
     <div class="user-bar">
       <img src="../static/images/compassicon.jpg" alt="로고" width="30" height="30" />
-      <h1 class="user-name">
-        {{ user_name }}님 환영합니다
-      </h1>
+      <h1 class="user-name">{{ user_name }}님 환영합니다</h1>
       <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
-        
     </div>
     <div id="wrap">
       <div class="wrapper">
@@ -72,40 +69,46 @@
           <!-- 오른쪽 통계 -->
           <div class="stats-box">
             <h3>나의 통계</h3>
-            <div class="stat-row">
-              <span>{{month}}월 평균 수면시간:</span>
-              <span>{{ my_stats.avg_sleep }}</span>
+            <div class="stat-row-wrapper">
+              <div class="stat-row">
+                <span>{{month}}월 평균 수면시간:</span>
+                <span>{{ my_stats.avg_sleep }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 목표달성 횟수:</span>
+                <span>{{ my_stats.goal_count }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 가장 많이 잔 시간:</span>
+                <span>{{ my_stats.max_sleep }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 가장 적게 잔 시간:</span>
+                <span>{{ my_stats.min_sleep }}</span>
+              </div><br />
             </div>
-            <div class="stat-row">
-              <span>{{month}}월 목표달성 횟수:</span>
-              <span>{{ my_stats.goal_count }}</span>
-            </div>
-            <div class="stat-row">
-              <span>{{month}}월 가장 많이 잔 시간:</span>
-              <span>{{ my_stats.max_sleep }}</span>
-            </div>
-            <div class="stat-row">
-              <span>{{month}}월 가장 적게 잔 시간:</span>
-              <span>{{ my_stats.min_sleep }}</span>
-            </div><br />
+              
     
             <h3>그룹 통계</h3>
-            <div class="stat-row">
-              <span>{{month}}월 평균 수면시간:</span>
-              <span>{{ group_stats.avg_sleep }}</span>
+            <div class="stat-row-wrapper">
+              <div class="stat-row">
+                <span>{{month}}월 평균 수면시간:</span>
+                <span>{{ group_stats.avg_sleep }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 평균 기상시간:</span>
+                <span>{{ group_stats.avg_wake }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 가장 많이 잔 사람:</span>
+                <span>{{ group_stats.max_sleeper }}</span>
+              </div>
+              <div class="stat-row">
+                <span>{{month}}월 가장 높은 목표 달성자:</span>
+                <span>{{ group_stats.max_goal }}</span>
+              </div> 
             </div>
-            <div class="stat-row">
-              <span>{{month}}월 평균 기상시간:</span>
-              <span>{{ group_stats.avg_wake }}</span>
-            </div>
-            <div class="stat-row">
-              <span>{{month}}월 가장 많이 잔 사람:</span>
-              <span>{{ group_stats.max_sleeper }}</span>
-            </div>
-            <div class="stat-row">
-              <span>{{month}}월 가장 높은 목표 달성자:</span>
-              <span>{{ group_stats.max_goal }}</span>
-            </div> 
+              
           </div>
           </div>
         </div><!--container-->
