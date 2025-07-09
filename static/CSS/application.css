@@ -14,6 +14,16 @@ body {
     letter-spacing: 2px;
     margin: 120px 0 60px 0;
   }
+  h1 {
+    width: 2em;
+    height: 2em;
+    margin-bottom: 1em;
+  }
+  h1 img {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
   .timer-btn-group {
     display: flex;
     background: #fff;
