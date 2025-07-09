@@ -319,6 +319,7 @@ h1 img {
     background-color: #fff;
     color: #3d3d3d;
     border-radius: 15px;
+    position: relative;
   }
   .user-card .status-box {
     font-size: 0;
