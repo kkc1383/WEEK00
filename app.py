@@ -73,6 +73,11 @@ def regist_account():
    gender_receive=request.form['gender_give']
    email_receive=request.form['email_give']
    birth_receive=request.form['birth_give']
+   
+   # ✅ 비밀번호 길이 검사
+   if not (8 <= len(pw_receive) < 15):
+        return jsonify({'result': 'fail', 'msg': '비밀번호 길이가 조건에 맞지 않습니다.'})
+
    account={'id':id_receive, 'pw':pw_receive, 'name':name_receive, 'gender':gender_receive, 'email':email_receive, 'birth':birth_receive}
    
    db.accounts.insert_one(account)
