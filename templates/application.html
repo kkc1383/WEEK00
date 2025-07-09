@@ -19,6 +19,13 @@
   <link rel="stylesheet" href="../static/CSS/application.css">
 </head>
 <body class="text-center">
+  <h1 class="logo">
+    <img src="../static/img/logo.png" alt="logo">
+  </h1>
+  <h2 class="user-name">{{ user_name }}님 환영합니다</h2>
+  <div class="log-out">
+    <button type="button" class="btn-logout" onclick="logout()">로그아웃</button>
+  </div>
   <div id="timer-display">00:00:00</div>
   <div class="timer-btn-group">
     <button class="timer-btn start" onclick="openObjectiveTimer()">시작</button>
@@ -29,18 +36,18 @@
   </div>
   <div class="objective_timer">
     <label for="targetTime">목표 기상시간</label>
-      <input type="time" id="targetTime" name="targetTime">
+    <input type="time" id="targetTime" name="targetTime">
     <button class="close-btn" onclick="closeObjectiveTimer()">확인</button>
   </div>
   <div class="calender">
     <a href="{{ url_for('calender') }}">캘린더 연결 링크</a>
   </div>
   <div class="user-list">
-    {% for name, duration in users.items() %}
+    {% for user in users %}
       <div class="user-card">
         <div class="profile-box"></div>
-        <div class="user-name">{{ name }}</div>
-        <div class="user-timer">{{duration}}</div>
+        <div class="user-name">{{ user.name }}</div>
+        <div class="user-timer" id="timer-{{ user.id }}">00 : 00</div>
       </div>
     {% endfor %}
   </div>
@@ -64,6 +71,20 @@
     const userId = "{{ user_id|default('guest') }}";
     const userName = "{{ user_name|default('게스트') }}";
 
+    function logout() {
+    $.ajax({
+    type: "POST",
+    url: "/logout", // 서버의 로그아웃 라우트
+    success: function(response) {
+      // 로그아웃 성공 시 메인(로그인) 페이지로 이동
+      window.location.href = "/";
+    },
+    error: function(xhr, status, error) {
+      alert("로그아웃 중 오류가 발생했습니다.");
+    }
+  });
+  }
+
     function tryRefreshAndRetry(callback){
       $.post('/refresh',{}, function (res){
         if (res.result==='success'){
@@ -82,7 +103,7 @@
         data:{'user_id':userId,'user_name':userName},
         success:function(res){
           if(res.status==='sleeping'){
-            //alert('현재 수면 중이시군요')
+            alert('현재 수면 중이시군요')
             seconds=res.elapsed_seconds;
             updateTimerDisplay();
             //TODO ~~님은 현재 수면 중입니다.
@@ -91,8 +112,12 @@
               updateTimerDisplay();
             },1000);
           }
+          else if(res.status==='not_sleeping'){
+            alert('현재 수면중이 아니군요')
+            //TODO 현재 수면 중이 아님
+          }
           else{
-            console.log('현재 수면 중이 아님')
+            alert('타이머 상태 확인 실패')
           }
         }
       })
@@ -135,6 +160,8 @@
       const hour = totalStartTime.getHours();
       const minute = totalStartTime.getMinutes();
       const startTime = `${hour}:${minute}`;
+      let inputValue = null;
+      let wakeup_goal_receive = null; // 목표 기상시간 저장
 
       if (timer) return; // 이미 동작 중이면 무시
       seconds = 0;
@@ -212,6 +239,10 @@
           } else {
             alert('실패!');
           }
+        },
+        error: function(xhr, status, error) {
+          console.error('AJAX 오류:', error);
+          alert('요청 중 오류가 발생했습니다.');
         }
       });
     }
