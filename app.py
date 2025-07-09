@@ -195,6 +195,34 @@ def application():
    except jwt.InvalidTokenError:
        return "유효하지 않은 토큰입니다."
 
+@app.route('/application/status',methods=['POST'])
+def get_status():
+    user_id=request.form['user_id']
+    user_name=request.form['user_name']
+
+    record=db.sleepdata.find_one({
+        'id':user_id,
+        'name':user_name,
+        'sleep_end':0
+    })
+    if record and 'sleep_start' in record:
+        sleep_start=record['sleep_start']
+        now=datetime.utcnow()+timedelta(hours=9)
+
+        elapsed_seconds=int((now-sleep_start).total_seconds())
+        return jsonify({
+            'result':'success',
+            'status':'sleeping',
+            'elapsed_seconds':elapsed_seconds,
+        })
+    elif record:
+        return jsonify({
+            'result':'success',
+            'status':'not_sleeping'
+            })
+    else:
+        return jsonify({'result':"failure"})
+
 @app.route('/application/start', methods=['POST'])
 def start_sleep():
     id_receive=request.form['id_give']
