@@ -59,11 +59,16 @@ def home():
 def calculate():
     datas=db.sleepdata.find({})
     for data in datas:
-        duration=get_duration(data['sleep_start'],data['sleep_end'])
-        h,m=map(int,data['wakeup_goal'].split(":"))
-        goal=data['sleep_end'].replace(hour=h, minute=m, second=0, microsecond=0)
-        isAchieved=(data['sleep_end']<=goal)
-        db.sleepdata.update_one({'_id':data['_id']},{'$set':{'duration':duration,'isAchieved':isAchieved}})
+        if data['sleep_end']!=0:
+            my_duration=get_duration(data['sleep_start'],data['sleep_end'])
+            h,m=map(int,data['wakeup_goal'].split(":"))
+            goal=data['sleep_end'].replace(hour=h, minute=m, second=0, microsecond=0)
+            isAchieved=(data['sleep_end']<=goal)
+        else:
+            my_duration="00:00"
+            isAchieved=False
+        db.sleepdata.update_one({'_id':data['_id']},{'$set':{'duration':my_duration,'isAchieved':isAchieved}})
+    return redirect('/application')
 
 @app.route('/register') # register로 라우팅 한 부분
 def register():
