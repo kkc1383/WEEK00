@@ -39,7 +39,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 40px;
+        padding: 20px 40px;
         z-index: 999;
         /* 카테고리바보다 위로 올리고 싶으면 */
       }
@@ -49,10 +49,11 @@
         /* 핵심! */
         text-align: center;
         /* 가운데 정렬 */
-        font-size: 18px;
+        font-size: 22px;
         font-weight: bold;
         white-space: nowrap;
         /* 줄바꿈 방지 */
+        margin: 0;
       }
 
       .btn-logout {
