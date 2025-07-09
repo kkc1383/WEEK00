@@ -290,6 +290,8 @@ h1 img {
     position: relative;
   }
   .user-card {
+    font-size: 0;
+    opacity: 0;
     background-color: #fff;
     color: #3d3d3d;
     border-radius: 15px;
