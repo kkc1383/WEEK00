@@ -66,7 +66,26 @@
         }
       });
     }
-
+    window.onload=function(){
+      $.ajax({
+        type:'GET',
+        url:'/application/status',
+        success:function(res){
+          if(res.status==='sleeping'){
+            seconds=res.elapsed_seconds;
+            updateTimerDisplay();
+            //TODO ~~님은 현재 수면 중입니다.
+            timer=setInterval(() => {
+              seconds++;
+              updateTimerDisplay();
+            },1000);
+          }
+        },
+        error:function(xhr, status,error){
+          alert('타이머 상태 확인 실패',error)
+        }
+      });
+    }
     function formatTime(totalSeconds) {
       const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
       const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
