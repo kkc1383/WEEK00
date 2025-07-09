@@ -6,12 +6,10 @@
       }
 
       .container {
-        display: flex;
-        gap: 80px;
-        align-items: stretch;
         max-width: 1200px;
         width: 100%;
-        margin: 0 auto;
+        margin: 60px auto 0;
+        margin-bottom: 80px;
         padding: 0 20px;
       }
 
@@ -37,8 +35,16 @@
         margin-bottom: 30px;
       }
 
+
+
       .page-title h1 {
         margin: 0;
+      }
+
+      .content-row {
+        display: flex;
+        gap: 80px;
+        align-items: stretch;
       }
 
       .calendar {
@@ -121,8 +127,8 @@
 
       .category-bar {
         position: fixed;
-        top: 0;
-        /* 화면 맨 위 고정 */
+        bottom: 0;
+        /* 화면 맨 아래 고정 */
         left: 0;
         width: 100%;
         /* 가로 100% */
