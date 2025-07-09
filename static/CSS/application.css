@@ -311,14 +311,13 @@ h1 img {
     justify-content: center;
     align-items: center;
     gap: 0.75em;
-    width: auto;
+    width: 49em;
     height: auto;
     position: relative;
+    margin-bottom: 10em;
   }
   .user-card {
-    background-color: #fff;
     color: #3d3d3d;
-    border-radius: 15px;
     position: relative;
   }
   .user-card .status-box {
@@ -348,8 +347,10 @@ h1 img {
 .user-card  .user-timer {
   color: #1d1d1d;
   font-weight: 700;
+  font-size: 1.5em;
 }
 .user-card .inner-text {
 position: absolute;
-bottom: 10px;
+left: 12px;
+bottom: 35px;
 }
