@@ -12,12 +12,17 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
-    <div class="page-title">
-      <a href="{{ url_for('calender', year=prev_year, month=prev_month) }}">◀</a>
-      <h1>{{ year }}년 {{ month }}월</h1>
-      <a href="{{ url_for('calender', year=next_year, month=next_month) }}">▶</a>
+    
+    <div class="category-bar">
+      <a href="{{ url_for('application') }}" class="category-btn">오늘의 기록</a>
+      <button class="category-btn disabled">이달의 기록</a>
     </div>
     <div class="container">
+      <div class="page-title">
+        <a href="{{ url_for('calender', year=prev_year, month=prev_month) }}">◀</a>
+        <h1>{{ year }}년 {{ month }}월</h1>
+        <a href="{{ url_for('calender', year=next_year, month=next_month) }}">▶</a>
+      </div>
       <div class="calendar-wrapper">
         <div class="calendar">
           <!-- 요일 헤더 -->
@@ -84,9 +89,5 @@
       </div>
     </div>
 
-    <div class="category-bar">
-      <a href="{{ url_for('application') }}" class="category-btn">오늘의 기록</a>
-      <button class="category-btn disabled">이달의 기록</a>
-    </div>
   </body>
 </html>

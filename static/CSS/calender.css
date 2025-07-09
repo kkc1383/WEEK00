@@ -63,8 +63,7 @@
       }
 
       .day.today {
-        border: 3px solid #1d1d1d;
-        !important;
+        border: 3px solid #1d1d1d !important;
         font-weight: bold;
       }
 
@@ -122,15 +121,14 @@
 
       .category-bar {
         position: fixed;
-        bottom: 0;
-        /* 화면 맨 아래 고정 */
+        top: 0;
+        /* 화면 맨 위 고정 */
         left: 0;
         width: 100%;
         /* 가로 100% */
         display: flex;
         border-top: 1px solid #ddd;
         background: #fff;
-        z-index: 999;
         /* 다른 요소보다 위에 */
       }
 
