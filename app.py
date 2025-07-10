@@ -429,7 +429,7 @@ def end_sleep():
 @app.route('/calender')
 def calender():
     token=request.cookies.get('access_token')
-    if not token:
+    if not token or not is_token_valid(token):
         return redirect('/')
     try:
         decoded=jwt.decode(token, app.config['SECRET_KEY'],algorithms=['HS256'])

@@ -80,6 +80,7 @@
             password_give: password
           },
           success: function (response) {
+            console.log(response)
             if (response['result'] === 'success') {
               document.cookie = `access_token=${response['access_token']}; path=/`
               alert('로그인 성공!')
