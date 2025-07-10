@@ -12,25 +12,33 @@ body, html {
 }
 
 .user-bar {
-  padding: 7px 20px;
-  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  height: 71px;
   background: #fff;
   border-bottom: 1px solid #ddd;
   display: flex;
-  justify-content: space-between !important;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
   z-index: 999;
-  text-align: center;
+  /* 카테고리바보다 위로 올리고 싶으면 */
 }
 
 .user-bar .user-name {
-  flex: 1;
+  flex: 1;               /* 핵심! */
+  text-align: center;    /* 가운데 정렬 */
   font-size: 22px;
   font-weight: bold;
-  margin: 0;
+  white-space: nowrap;   /* 줄바꿈 방지 */
+  margin-bottom: 0;
+}
+
+
+.user-name {
+  color: #1d1d1d;
 }
 
 .btn-logout {
