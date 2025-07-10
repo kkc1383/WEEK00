@@ -24,6 +24,23 @@
           alert("로그아웃 중 오류가 발생했습니다.");
         });
       }
+      function tryRefreshBeforeRender() {
+        $.post('/refresh', {}, function(res) {
+          if (res.result === 'success') {
+            localStorage.setItem('access_token', res.access_token);
+            // 페이지 정상 유지
+          } else {
+            alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+            window.location.href = '/';
+          }
+        }).fail(function () {
+          alert('인증 오류가 발생했습니다. 다시 로그인해주세요.');
+          window.location.href = '/';
+        });
+      }
+      $(document).ready(function() {
+        tryRefreshBeforeRender();
+      });
     </script>
     <div class="user-bar">
       <img src="../static/images/compassicon.jpg" alt="로고" width="30" height="30" />
