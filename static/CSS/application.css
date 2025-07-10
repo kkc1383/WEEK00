@@ -109,3 +109,30 @@ body {
   .objective_time:hover {
     color: rgba(19, 217, 139, 0.8);
   }
+/* ===== 반응형 user-list 레이아웃 추가 ===== */
+.user-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px 16px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+@media (max-width: 900px) {
+  .user-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .user-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 8px;
+    max-width: 98vw;
+  }
+}
+@media (max-width: 400px) {
+  .user-list {
+    grid-template-columns: 1fr;
+    gap: 12px 0;
+  }
+}
