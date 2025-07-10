@@ -511,10 +511,11 @@ h1 img {
   .user-bar .user-name {
     flex: 1;
     /* 가운데 정렬 */
+    text-align: center !important;
     font-size: 18px;
     font-weight: bold;
     margin: 0;
-    text-align: center;
+
   }
 
   .btn-logout {
