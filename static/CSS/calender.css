@@ -21,7 +21,7 @@ body, html {
   background: #fff;
   border-bottom: 1px solid #ddd;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between !important;
   z-index: 999;
 }
 
@@ -270,7 +270,7 @@ a:active {
   width: 100%;
 }
 
-.page-title h1 {
+.page-title {
   margin: 0;
 }
 
@@ -511,9 +511,11 @@ h1 img {
   .user-bar .user-name {
     flex: 1;
     /* 가운데 정렬 */
+    text-align: center !important;
     font-size: 18px;
     font-weight: bold;
     margin: 0;
+
   }
 
   .btn-logout {
