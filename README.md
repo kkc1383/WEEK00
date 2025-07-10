@@ -1,5 +1,12 @@
 # 🛠️ KRAFTON Jungle Week00 Mini Project  
 
+## 🙋 Contributors
+
+
+ - 강경찬: [@kkc1383](https://github.com/kkc1383)  
+ - 백준혁: [@Junryul](https://github.com/Junryul)  
+ - 박준성: [@junsung-park97](https://github.com/junsung-park97)  
+
 ## 💤 Sleep Tracker Web App
 
 Flask 기반의 수면 기록 웹 애플리케이션입니다.  
