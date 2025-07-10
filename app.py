@@ -6,7 +6,8 @@ from flask import Flask, render_template, jsonify, render_template_string, reque
 from flask.json.provider import JSONProvider
 from datetime import datetime, timedelta
 import jwt
-
+from dotenv import load_dotenv
+import os
 import json
 import sys
 import smtplib
@@ -14,9 +15,11 @@ from email.mime.text import MIMEText
 from calendar import monthrange
 
 app = Flask(__name__)
-client=MongoClient('mongodb://test:test@3.34.90.101',27017)
-db=client.dbAccounts
-app.config['SECRET_KEY']='1q2w3e4r!'  # secret key
+load_dotenv()
+mongo_uri=os.getenv('MONGO_URI')
+client=MongoClient(mongo_uri)
+db=client['dbAccounts']
+app.config['SECRET_KEY']=os.getenv('SECRET_KEY')  # secret key
 
 class CustomJSONEncoder(json.JSONEncoder): 
     def default(self, o):
