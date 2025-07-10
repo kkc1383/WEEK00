@@ -499,7 +499,7 @@ def calender():
                 adjusted_date=sleep_start.date()
             key=adjusted_date.strftime('%Y-%m-%d')
 
-            if 'isAchieved' in record:
+            if 'isAchieved' in record and record['sleep_end']!=0:
                 if record['isAchieved'] == True:
                     sleep_status[key] = 'success'
                 elif record['isAchieved'] == False:
