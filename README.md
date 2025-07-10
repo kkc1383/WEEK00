@@ -1,4 +1,6 @@
-# 💤 Sleep Tracker Web App
+# 🛠️ KRAFTON Jungle Week00 Mini Project  
+
+## 💤 Sleep Tracker Web App
 
 Flask 기반의 수면 기록 웹 애플리케이션입니다.  
 서버 사이드 렌더링(SSR) 방식과 JWT 기반 인증 시스템을 도입하여  
