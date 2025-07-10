@@ -1,0 +1,41 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+ENV/
+env/
+.venv/
+
+# VSCode settings
+.vscode/
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+
+# Flask/Python logs
+*.log
+
+# Environment variables
+.env
+!*.example     # ✅ .env.example은 Git에 포함
+
+# Jupyter Notebook checkpoints (if any)
+.ipynb_checkpoints/
+
+# Compiled C extensions
+*.so
+
+# MongoDB dump files
+dump/
+*.bson
+dump_*.json   # ✅ 일반 *.json 대신 MongoDB 백업 형식만 제외
+
+# JWT token cookies (if any saved for testing)
+*.jwt
+*.token
