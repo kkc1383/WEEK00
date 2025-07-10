@@ -18,8 +18,10 @@ app = Flask(__name__)
 load_dotenv()
 mongo_uri=os.getenv('MONGO_URI')
 client=MongoClient(mongo_uri)
-db=client['dbAccounts']
+db=client.get_default_database()
 app.config['SECRET_KEY']=os.getenv('SECRET_KEY')  # secret key
+EMAIL_USER=os.getenv('EMAIL_USER')
+EMAIL_PASSWORD=os.getenv('EMAIL_PASSWORD')
 
 class CustomJSONEncoder(json.JSONEncoder): 
     def default(self, o):
@@ -124,15 +126,15 @@ def find_id():
         return jsonify({'result':'failure'})
     
 
-def send_email(receiver, pw):  # email 보내기기
-    smtp = smtplib.SMTP('smtp.gmail.com', 587, local_hostname='localhost')
+def send_email(receiver, pw):  # email 보내기
+    smtp = smtplib.SMTP('smtp.gmail.com', 587)
     smtp.starttls()
-    smtp.login('farvinjr104@gmail.com', 'xzyk njxn dkru cvku')
-    msg = MIMEText(f"해당 계정의의 비밀번호는: {pw} 입니다.")
+    smtp.login(EMAIL_USER, EMAIL_PASSWORD)
+    msg = MIMEText(f"해당 계정의 비밀번호는: {pw} 입니다.")
     msg['Subject'] = '비밀번호 찾기 결과'
     msg['To'] = receiver
-    msg['From'] = 'farvinjr104@gmail.com'
-    smtp.sendmail('farvinjr104@gmail.com', receiver, msg.as_string())
+    msg['From'] = EMAIL_USER
+    smtp.sendmail(EMAIL_USER, receiver, msg.as_string())
     smtp.quit()
     
 @app.route('/find/pw', methods=['POST'])
