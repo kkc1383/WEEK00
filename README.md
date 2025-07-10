@@ -50,7 +50,7 @@ Flask 기반의 수면 기록 웹 애플리케이션입니다.
 ### 1. 저장소 클론
 
 ```bash
-git clone https://github.com/your-username/sleep-tracker.git
+git clone https://github.com/kkc1383/WEEK00.git
 cd sleep-tracker
 ```
 
@@ -58,7 +58,7 @@ cd sleep-tracker
 
 ```bash
 python -m venv venv
-venv\Scripts\activate
+source venv/bin/activate
 ```
 
 ### 3. 패키지 설치
@@ -95,7 +95,7 @@ EMAIL_PASSWORD=your_app_password
 ### 5. 앱 실행
 
 ```bash
-flask run
+python app.py
 ```
 
 ---
@@ -103,17 +103,17 @@ flask run
 ## 📂 디렉토리 구조
 
 ```
-sleep-tracker/
+WEEK00/
 │
 ├── app/
 │   ├── templates/       # HTML 템플릿 (Jinja2)
-│   ├── static/          # JS, CSS
+│   ├── static/          # JS, CSS, SourceImg
 │   └── __init__.py
 │
 ├── .env.example         # 환경변수 템플릿 파일 (민감정보 없음)
 ├── requirements.txt     # 필요한 패키지 목록
 ├── .gitignore           # Git 제외 목록
-└── run.py               # 실행 진입점
+└── app.py               # 실행 진입점
 ```
 
 ---
@@ -140,4 +140,4 @@ sleep-tracker/
 
 MIT License
 
-``'
+```
