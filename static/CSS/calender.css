@@ -23,6 +23,7 @@ body, html {
   display: flex;
   justify-content: space-between !important;
   z-index: 999;
+  text-align: center;
 }
 
 .user-bar .user-name {
